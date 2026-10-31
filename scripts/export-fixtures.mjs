@@ -1,5 +1,5 @@
 import {writeFileSync,mkdirSync} from 'node:fs';
-import {CASES,MODES,generate,groupRows,fit,profile} from '../web/engine.js';
+import {VERSION,CASES,MODES,generate,groupRows,fit,profile} from '../web/engine.js';
 const fixtures=CASES.map(c=>{
   const rows=generate(c.id),groups=groupRows(rows);
   const fits=Object.keys(MODES).map(mode=>fit(groups,mode));
@@ -8,5 +8,5 @@ const fixtures=CASES.map(c=>{
   return {id:c.id,rows,groups,fits,profileChecks:selected};
 });
 mkdirSync('results',{recursive:true});
-writeFileSync('results/reference.json',JSON.stringify({version:'0.1.0',seed:42,fixtures},null,2)+'\n');
+writeFileSync('results/reference.json',JSON.stringify({version:VERSION,seed:42,fixtures},null,2)+'\n');
 console.log(`Exported ${fixtures.length} cases and ${fixtures.length*4} fitted models.`);

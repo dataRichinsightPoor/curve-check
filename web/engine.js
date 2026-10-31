@@ -1,5 +1,6 @@
 // Original numerical implementation. No runtime dependencies.
-export const VERSION = '0.1.0';
+import {EXTRA_CASES} from './scenarios.js';
+export const VERSION = '0.2.0';
 export const MODES = {
   free: {name: 'Free 4PL', p: 4},
   bottom: {name: 'Bottom = 0', p: 3},
@@ -220,7 +221,8 @@ export const CASES = [
     next:'Inspect raw wells, plate position, dilution preparation and the prespecified exclusion rule. Repeat the affected region.'},
   {id:'hetero',title:'Unequal measurement noise',subtitle:'Equal weights are an assumption',bottom:4,m:1,h:1,noise:6,max:4,
     lesson:'Here the response-dependent noise violates the common-variance working likelihood. A narrow profile can be overconfident.',
-    next:'Use an experimentally supported variance model or suitable likelihood and propagate control uncertainty.'}
+    next:'Use an experimentally supported variance model or suitable likelihood and propagate control uncertainty.'},
+  ...EXTRA_CASES
 ];
 export function generate(id='complete',options={}) {
   const c=CASES.find(c=>c.id===id)??CASES[0], max=options.max??c.max, noise=options.noise??c.noise;
@@ -228,9 +230,10 @@ export function generate(id='complete',options={}) {
   const uniform=()=>{state=(1664525*state+1013904223)>>>0;return (state+.5)/4294967296;};
   const normal=()=>Math.sqrt(-2*Math.log(uniform()))*Math.cos(2*Math.PI*uniform());
   const rows=[];
-  for(let i=0;i<13;i++) {
-    const x=10**(-2+(max+2)*i/12);
-    let y=predict(x,{top:100,bottom:c.bottom,m:c.m,h:c.h});
+  const count=c.doses??13;
+  for(let i=0;i<count;i++) {
+    const x=10**(-2+(max+2)*i/(count-1));
+    let y=c.fn?c.fn(x):predict(x,{top:100,bottom:c.bottom,m:c.m,h:c.h});
     if(id==='hook') y+=85/(1+(300/x)**2);
     if(id==='outlier' && i===7) y+=40;
     for(let j=0;j<3;j++) rows.push({x,y:y+normal()*noise*(id==='hetero'?(.3+1.7*y/100):1)});

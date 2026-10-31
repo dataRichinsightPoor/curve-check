@@ -20,8 +20,10 @@
   </section>
   <nav class="tabs" aria-label="Workbench sections">
     <button data-tab="lab" class="active" aria-selected="true" role="tab">Curve laboratory</button>
+    <button data-tab="illusions" aria-selected="false" role="tab">False-curve laboratory</button>
     <button data-tab="guide" aria-selected="false" role="tab">Reporting guide</button>
     <button data-tab="methods" aria-selected="false" role="tab">Methods &amp; evidence</button>
+    <button data-tab="essay" aria-selected="false" role="tab">The article</button>
   </nav>
   <section id="lab" class="tab-panel">
     <div class="work-grid">
@@ -35,7 +37,7 @@
         <input id="noise" type="range" min="0" max="15" step=".5" value="3">
         <label for="seed">Random seed</label><input id="seed" type="number" min="1" max="999999" value="42">
         <button id="generate" class="secondary">Regenerate experiment</button>
-        <p class="fine">13 log-spaced doses, 3 wells per dose. Range changes redistribute the dose grid. All example parameters are illustrative.</p>
+        <p class="fine">28 synthetic cases. Normally 13 log-spaced doses, 3 wells per dose; the sparse case uses 5 doses. Range changes redistribute the grid. Generators illustrate possibilities, not diagnostic signatures.</p>
         <div class="divider"></div>
         <div class="section-label">02 / FITTING ASSUMPTION</div>
         <label for="model">Model under inspection</label>
@@ -64,6 +66,7 @@
           <section class="decision"><span class="section-label">CONTROL-DEFINED 50%</span><h3 id="absStatus">Computing</h3><p id="absValue" class="value"></p><p id="absText"></p></section>
         </div>
         <section class="insight"><p id="lesson"></p><p><b>Next discriminating experiment.</b> <span id="next"></span></p></section>
+        <section class="evidence-boundary"><span class="section-label">THREE DIFFERENT QUESTIONS</span><p>Numerical localization is assessed above. <strong>Readout validity: unverified. Biological attribution: unverified.</strong> Even a clean profile and acceptable controls cannot distinguish intended activity from a smooth confound. Explore the False-curve laboratory.</p></section>
       </div>
     </div>
     <section class="diagnostics">
@@ -79,6 +82,16 @@
       <p id="exportStatus" class="fine" role="status"></p>
     </section>
   </section>
+  <section id="illusions" class="tab-panel" hidden>
+    <p class="eyebrow">THE CURVE CAN BE REAL. THE EXPLANATION CAN STILL BE WRONG.</p><h2>Change the experiment, not the polish.</h2>
+    <p>These are original, deliberately simplified simulations. The hidden causes are known because we assigned them, not because the software inferred them from a sigmoid.</p>
+    <div class="two-charts">
+      <section><h3>Same primary curve, five explanations</h3><label for="intervention">Choose an idealized intervention</label><select id="intervention"></select><div id="twinsChart" class="labplot"></div><div id="twinsLegend" class="legend"></div><p id="twinNote"></p><p class="fine">Overlapping lines are intentional. An orthogonal positive result does not by itself establish the intended molecular mechanism. <a href="https://www.ncbi.nlm.nih.gov/sites/books/NBK374281/" target="_blank" rel="noopener">Assay Guidance Manual: reporter interference</a></p></section>
+      <section><h3>Normalization can manufacture amplitude</h3><p>A synthetic raw signal declines only from about 100 to 96 units. Independent controls are 0 and 100; self-scaling instead uses this series’ own extrema.</p><label for="normalization">Normalization rule</label><select id="normalization"><option value="control">Independent controls</option><option value="self">Self min–max scaling</option></select><div id="normalChart" class="labplot"></div><p id="normalNote"></p><p class="fine">Positive affine transformations preserve the relative midpoint in an unconstrained logistic model but change a fixed numerical threshold. Fixed asymptotes, numerical bounds and changed weights can break this invariance in a fitted implementation. This panel shows exact generator arithmetic, not a new fit.</p></section>
+    </div>
+    <section class="potency-panel"><h3>A midpoint ratio is not always relative potency</h3><p>Both synthetic curves span 100% to 0%. Reference midpoint: 10 nM, slope: 1. Test midpoint: 20 nM. Change only the test slope to see whether a single horizontal shift still describes the pair.</p><label for="testSlope">Test-curve Hill slope</label><select id="testSlope"><option value="1">1: parallel to reference</option><option value=".5">0.5: shallower</option><option value="2">2: steeper</option></select><div class="two-charts"><div id="potencyChart" class="labplot"></div><div><div class="table-wrap"><table><caption>Test dose / reference dose at matched fractional inhibition</caption><thead><tr><th>Inhibition</th><th>Reference, nM</th><th>Test, nM</th><th>Dose ratio</th></tr></thead><tbody id="potencyTable"></tbody></table></div><p id="potencyNote"></p></div></div><p class="fine">Dose ratio is test/reference, so smaller values mean less test material is needed. This is an algebra demonstration, not a formal similarity/equivalence test, validated relative-potency assay, or USP implementation. <a href="https://www.tandfonline.com/doi/full/10.2144/btn-2019-0031" target="_blank" rel="noopener">White et al., 2019: bioassay statistical considerations</a></p></section>
+  </section>
+  <section id="essay" class="tab-panel reading" hidden><p class="eyebrow">DATA-RICH, INSIGHT-POOR / 99 SMALL PROBLEMS 09</p><div class="exports"><button id="copyArticle">Copy article</button><a class="file-button" href="article.md" download>Download article (.md)</a></div><p id="copyStatus" class="fine" role="status"></p><article id="articleBody"><p>Loading article…</p></article></section>
   <section id="guide" class="tab-panel reading" hidden>
     <p class="eyebrow">REPORT THE QUANTITY THE EXPERIMENT SUPPORTS</p><h2>“Not estimable” is a result, not a software failure.</h2>
     <p>A relative IC50 is halfway between the fitted asymptotes. A control-defined IC50 is the concentration at a predeclared 50% response level. These need not coincide, and the second may not exist even when the first is well resolved. <a href="https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm" target="_blank" rel="noopener">GraphPad’s definition guide ↗</a></p>
@@ -99,9 +112,11 @@
     <p class="equation">LR(m) = n ln[SSE(m) / SSEmin] ≤ 3.84146</p>
     <p>With independent Gaussian concentration means of common unknown variance, the profile likelihood reoptimizes the other parameters at fixed m. The cutoff is an asymptotic, one-parameter likelihood-ratio approximation. Small samples, boundaries, heteroscedasticity, shared normalization and model mismatch can invalidate nominal coverage; this app does not calibrate that coverage. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6347253/" target="_blank" rel="noopener">Profile-likelihood methodology ↗</a></p>
     <p>The control-defined threshold is solved separately as x₅₀ = 10ᵐ[(T−50)/(50−B)]¹/ʰ, only if B &lt; 50 &lt; T. Its preferred displayed value is a local linear interpolation in log concentration between adjacent measured means bracketing 50%. That tested-dose bracket is not a confidence interval. No absolute-IC50 confidence interval is computed.</p>
-    <h3>Audit rules, version 0.1.0</h3><p>Relative support requires at least seven positive doses, one descending crossing of the fitted midpoint response, an in-range midpoint, no parameter-bound hit, and a finite connected relative profile no wider than two log units. The observed response span must exceed max(10 percentage points, 3 × estimated mean-level noise). An upward reversal larger than max(8, 3 × noise), or mean RMSE greater than max(8, 2 × noise), triggers review.</p>
+    <h3>Audit rules, version 0.2.0</h3><p>Numerical localization requires at least seven positive doses, one descending crossing of the fitted midpoint response, an in-range midpoint, no parameter-bound hit, and a finite connected relative profile no wider than two log units. The observed response span must exceed max(10 percentage points, 3 × estimated mean-level noise). An upward reversal larger than max(8, 3 × noise), or mean RMSE greater than max(8, 2 × noise), triggers review.</p>
     <p>Mean-level noise is the RMS of within-dose SD/√replicate count across replicated concentrations. It is descriptive and assumes wells are independently noisy; it does not measure between-run reproducibility. Numerical rules are original teaching choices and are not recommendations attributed to a guideline.</p>
     <h3>Evidence behind the questions</h3>
+    <p><a href="https://database.ich.org/sites/default/files/ICH_Q2(R2)_Guideline_2023_1130_ErrorCorrection_2025.pdf" target="_blank" rel="noopener">ICH Q2(R2)</a> and <a href="https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf" target="_blank" rel="noopener">ICH Q14</a> frame intended-purpose analytical performance and development; their example criteria are not universal discovery IC50 rules. <a href="https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/pst.426" target="_blank" rel="noopener">Sebaugh (2011)</a> recommends at least two concentrations beyond each bend for relative midpoints and at least two predicted responses on each side of 50% for absolute estimates. The prototype does not implement or certify those full recommendations. Its seven-dose and other numerical rules remain original teaching heuristics, not published acceptance standards.</p>
+    <p>The <a href="https://doi.usp.org/USPNF/USPNF_M5677_02_01.html" target="_blank" rel="noopener">USP &lt;1034&gt; preview</a> is not a verified copy of the complete current chapter. We do not claim USP compliance. The <a href="https://doi.usp.org/USPNF/USPNF_M5677_20101_01.html" target="_blank" rel="noopener">2024 revision preview</a> is labeled a proposal; current official status must be checked in USP-NF.</p>
     <ol class="evidence">
       <li><a href="https://www.ncbi.nlm.nih.gov/sites/books/n/assayguide/assayops/" target="_blank" rel="noopener">Beck et al. Assay Operations for SAR Support.</a> Interpolation, reporting bounds, replication and curve constraints.</li>
       <li><a href="https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm" target="_blank" rel="noopener">GraphPad. 50% of what?</a> Relative versus control-defined midpoints and partial response.</li>
@@ -116,6 +131,7 @@
     <p>All examples are synthetic. Computation is local to your browser; external fonts may load, but input data are not transmitted. Numerical testing verifies implementation, not biological validity. Original code and documentation: MIT license. External literature retains its own terms.</p>
   </section>
 </main>
-<footer><span>CURVE CHECK / v0.1.0</span><span>Useful models for assumptions with expensive ambitions.</span><span>RESEARCH PROTOTYPE · NOT ASSAY VALIDATION</span></footer>
+<footer><span>CURVE CHECK / v0.2.0</span><span>Useful models for assumptions with expensive ambitions.</span><span>RESEARCH PROTOTYPE · NOT ASSAY VALIDATION</span></footer>
 <script type="module" src="app.js"></script>
+<script type="module" src="labs.js"></script>
 </body></html>

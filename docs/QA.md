@@ -1,5 +1,19 @@
 # Curve Check verification record
 
+## Version 0.2.0 expansion
+
+The historical v0.1.0 checks below are retained as a previous-version record, not represented as new-version evidence.
+
+- 50/50 JavaScript tests passed on October 31, 2026, including all 28 scenarios, exact primary artifact twins, intervention masks, normalization, effect-level dose ratios, and article-link rendering regressions.
+- Independent SciPy checks passed for 112 scenario/model fits and 112 fixed-midpoint nuisance optimizations. Maximum absolute fit-SSE difference: 9.317227522842586e-08. Raw comparisons are in `results/scipy-verification.json`.
+- Local Chromium: all 28 scenarios, four fitting modes, control declaration cycle, range/noise/seed controls, profile zoom cycle, and dose omission exercised without page exceptions.
+- CSV paste with exact zero, malformed/script-like input rejection without data replacement, CSV upload, four nonempty exports, and JSON restoration exercised through user-facing controls.
+- All five intervention settings, both normalization settings, and all three test-slope settings exercised; the shallow-test dose ratios displayed 0.5, 2, and 8 at 20%, 50%, and 80% inhibition.
+- Article rendered 50 paragraphs and two equation blocks. Copy completed, Markdown downloaded, and the first citation opened at the correct URL after repairing a greedy-link parsing bug.
+- Desktop/mobile/desktop resizing tested. A narrow-screen grid overflow was repaired; charts rerender labels at actual panel width. The article contains no image, and neither the screenshot nor its attachment path appears in the shipped files.
+
+These are implementation and UI checks. They do not validate mechanism, uncertainty coverage, a reporting rule, or regulatory compliance.
+
 ## Required user flows
 
 - Open the laboratory and identify synthetic data, the selected model and separate relative/absolute reporting outcomes.

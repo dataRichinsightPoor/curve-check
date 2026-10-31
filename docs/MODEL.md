@@ -1,6 +1,6 @@
 # Curve Check: model and numerical methods
 
-Version 0.1.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation.
+Version 0.2.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation. The core fitting/audit rules are unchanged from v0.1.0; the interface now names a successful numerical result “Localized under working model” and separately marks readout validity and biological attribution unverified.
 
 ## Data contract
 

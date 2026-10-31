@@ -54,7 +54,7 @@ function renderCharts(){
 }
 function render(a){
   current=a;const f=a.fit,p=a.profile;
-  $('relStatus').textContent=a.relativeSupported?'Conditional estimate supported':'Do not endorse this estimate';
+  $('relStatus').textContent=a.relativeSupported?'Localized under working model':'Numerically unresolved / review';
   $('relStatus').parentElement.classList.toggle('ok',a.relativeSupported);
   $('relValue').textContent=`${format(10**f.m)} nM · fitted candidate`;
   const lower=p.lower===null?'open':`${format(10**p.lower)}`,upper=p.upper===null?'open':`${format(10**p.upper)}`;
@@ -74,7 +74,7 @@ function render(a){
   report=`${kind==='synthetic'?'Synthetic teaching example. ':''}${MODES[f.mode].name} was fitted to ${a.groups.length} equally weighted concentration means (${rows.length} observations; ${format(a.min)}–${format(a.max)} nM). `;
   report+=a.relativeSupported?`The relative IC50 was ${format(10**f.m)} nM (approximate 95% profile-likelihood interval ${lower}–${upper} nM), conditional on the model, parameter domain and independent, equal-variance Gaussian mean errors. `:'A reportable relative IC50 was not established by this audit; the numerical fitted candidate is not endorsed. ';
   report+=a.absoluteSupported?`The control-defined 50% threshold was locally interpolated at ${format(a.absCross[0].estimate)} nM between tested concentrations ${format(a.absCross[0].low)} and ${format(a.absCross[0].high)} nM; that bracket is not a confidence interval. `:a.absoluteText+' ';
-  report+=`Fitted bottom ${format(f.bottom)}%, top ${format(f.top)}%, Hill slope ${format(f.h)}. Experimental repeatability and mechanism require separate evaluation.`;
+  report+=`Fitted bottom ${format(f.bottom)}%, top ${format(f.top)}%, Hill slope ${format(f.h)}. Readout validity and biological attribution are NOT established by this numerical audit. Experimental repeatability and mechanism require separate evaluation.`;
   $('reportText').textContent=report;renderCharts();
 }
 function setBusy(v){busy=v;$('busy').textContent=v?'COMPUTING':'LOCAL COMPUTATION';for(const id of ['loo','exportReport','exportCSV','exportJSON','exportSVG'])$(id).disabled=v;}

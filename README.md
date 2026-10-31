@@ -3,7 +3,7 @@
 99 Small Problems · Installment 09  
 Data-Rich, Insight-Poor
 
-**Is it a curve, and can we report the IC50?** Curve Check is a local-first workbench for separating an optimizer's fitted candidate from an assay-supported reporting claim. It includes ten synthetic cases, a browser-based fitting engine, a literature-grounded analytical companion and numerical tests.
+**Is it a curve, and can we report the IC50?** Curve Check is a local-first workbench for separating numerical localization, readout validity, and biological attribution. Version 0.2.0 includes 28 synthetic cases, a browser-based fitting engine, three false-curve experiments, a literature-grounded analytical companion and numerical tests.
 
 ## Use the workbench
 
@@ -26,6 +26,10 @@ All input data and calculations stay in the browser. An optional Fontshare style
 - Import one normalized concentration-response curve as CSV, including genuine zero-dose controls.
 - Run leave-one-dose-out sensitivity without deleting observations from the original fit.
 - Export an audit in Markdown, input data in CSV, a restorable JSON session and the dose-response chart in SVG.
+- Compare identical primary sigmoids assigned to five different causes, then apply explicitly idealized interventions.
+- Contrast independent-control normalization with self min–max scaling of a tiny effect.
+- Inspect effect-level dose ratios for parallel and nonparallel curves.
+- Read, copy or download the complete companion article inside the application.
 
 The absolute-threshold value is a local interpolation in log concentration; its measured-dose bracket is not a confidence interval. The app does not calculate an absolute-IC50 confidence interval. It never automatically converts “50% not observed” into a claim that a finite IC50 must exist above the tested range.
 
@@ -49,7 +53,11 @@ The first two commands require only Node.js 20 or newer. The independent referen
 
 ## Scope and provenance
 
-Version 0.1.0 is a research and teaching prototype, not a validated assay-analysis platform, clinical tool or regulatory acceptance standard. Its rules are deliberately conservative teaching choices; they are not claimed as universally valid cutoffs. Confidence calculations assume independent, common-variance Gaussian concentration means and omit control and between-run uncertainty.
+Version 0.2.0 is a research and teaching prototype, not a validated assay-analysis platform, clinical tool or regulatory acceptance standard. Its rules are declared teaching choices; they are not claimed as universally valid cutoffs. Confidence calculations assume independent, common-variance Gaussian concentration means and omit control and between-run uncertainty. No full implementation of Sebaugh recommendations, ICH validation, or USP relative-potency analysis is claimed.
+
+The expanded scenarios are stylized counterexamples, not automatic mechanism classifiers. An artifact scenario can pass every numerical audit. The primary artifact twins share identical observations by construction. See `web/scenarios.js` for all assigned mechanisms and idealized intervention masks. Synthetic experiment sessions retain the v1 JSON schema; old sessions remain importable. The three additional algebra laboratories are independent teaching panels and are not serialized in curve-session JSON.
+
+To rebuild the article view after editing the Markdown, run `node scripts/build-article.mjs`. The renderer is for the authored document only, not user-supplied HTML.
 
 This installment complements, rather than replaces, [censored-potency](https://github.com/dataRichinsightPoor/censored-potency) and [Censor Check, installment 06](https://github.com/dataRichinsightPoor/censor-check). It audits a curve before a potency enters a results table; Censor Check audits what happens to censored potencies after they enter a dataset.
 
