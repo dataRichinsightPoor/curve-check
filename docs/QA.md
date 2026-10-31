@@ -11,6 +11,10 @@ The historical v0.1.0 checks below are retained as a previous-version record, no
 - All five intervention settings, both normalization settings, and all three test-slope settings exercised; the shallow-test dose ratios displayed 0.5, 2, and 8 at 20%, 50%, and 80% inhibition.
 - Article rendered 50 paragraphs and two equation blocks. Copy completed, Markdown downloaded, and the first citation opened at the correct URL after repairing a greedy-link parsing bug.
 - Desktop/mobile/desktop resizing tested. A narrow-screen grid overflow was repaired; charts rerender labels at actual panel width. The article contains no image, and neither the screenshot nor its attachment path appears in the shipped files.
+- Hosted deployment: fresh cloud-browser session loaded v0.2.0 with `window.origin === "null"`; the reporter example still localized numerically, demonstrating the retained main-thread fallback.
+- Hosted intervention, self-normalization, and nonparallel ratio controls returned their expected visible results. JSON export saved a nonempty session; article copy completed.
+- The original relative article-download link navigated instead of saving in the opaque-origin preview. Replaced with a fetched Blob download; the final hosted check saved the 27,585-byte Markdown and retained the app page. The first article citation opened the exact intended NCBI URL.
+- The public `/computer/a` wrapper returned a Cloudflare challenge to fresh Playwright. Hosted functionality was therefore checked through the deployment tool's temporary QA URL, not claimed as a successful automated wrapper check.
 
 These are implementation and UI checks. They do not validate mechanism, uncertainty coverage, a reporting rule, or regulatory compliance.
 
