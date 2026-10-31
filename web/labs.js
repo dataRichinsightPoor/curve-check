@@ -41,6 +41,14 @@ twins();normalization();potency();
 document.querySelector('[data-tab="illusions"]').addEventListener('click',()=>{twins();normalization();potency();});
 let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(!$('illusions').hidden){twins();normalization();potency();}},100);});
 fetch('article-fragment.html').then(r=>{if(!r.ok)throw Error('Article unavailable');return r.text();}).then(html=>{$('articleBody').innerHTML=html;}).catch(()=>{$('articleBody').textContent='Article could not load. Download the Markdown version above.';});
+$('downloadArticle').addEventListener('click',async()=>{
+  try{
+    const response=await fetch('article.md');if(!response.ok)throw Error('Article unavailable');
+    const url=URL.createObjectURL(new Blob([await response.text()],{type:'text/markdown;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='Is-It-a-Curve-and-Can-We-Report-the-IC50.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+    $('copyStatus').textContent='Article download prepared with complete linked citations.';
+  }catch{$('copyStatus').textContent='Download unavailable. Use Copy article, or select the article text below.';}
+});
 $('copyArticle').addEventListener('click',async()=>{
   const body=$('articleBody');
   try{
