@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, cite this repository and its version."
 title: "Curve Check: Is it a curve, and can we report the IC50?"
 type: software
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-10-31
 authors:
   - name: "Data-Rich, Insight-Poor"

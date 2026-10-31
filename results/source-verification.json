@@ -1,0 +1,35 @@
+{
+  "checks": [
+    {
+      "fixture": "weak",
+      "normalization": "passed",
+      "flatSSE": 2168.5909106962263,
+      "AICc": "passed"
+    },
+    {
+      "fixture": "clear",
+      "normalization": "passed",
+      "flatSSE": 953.9106561164715,
+      "AICc": "passed"
+    },
+    {
+      "fixture": "flat",
+      "normalization": "passed",
+      "flatSSE": 1267.0727188925648,
+      "AICc": "passed"
+    },
+    {
+      "fixture": "tiny",
+      "normalization": "passed",
+      "flatSSE": 38.123689567562494,
+      "AICc": "passed"
+    },
+    {
+      "fixture": "constant",
+      "normalization": "passed",
+      "flatSSE": 0.0,
+      "AICc": "passed"
+    }
+  ],
+  "scope": "Arithmetic verification, not calibrated inference or assay validation."
+}

@@ -3,7 +3,21 @@
 99 Small Problems · Installment 09  
 Data-Rich, Insight-Poor
 
-**Is it a curve, and can we report the IC50?** Curve Check is a local-first workbench for separating numerical localization, readout validity, and biological attribution. Version 0.2.0 includes 28 synthetic cases, a browser-based fitting engine, three false-curve experiments, a literature-grounded analytical companion and numerical tests.
+**Trace the evidence. Then report the IC50.** Curve Check v0.3.0 reconstructs a one-run concentration-response record from raw sample and control observations through normalization to a conditional claim. Its distinct job in the series is preserving that source-to-claim chain, not supplying another general curve fitter or comparability checklist.
+
+The earlier 28 synthetic cases, browser-based fitting engine and false-curve experiments remain as supporting diagnostics. See the [series overlap review](docs/SERIES-OVERLAP.md) for the explicit relationship to censored-potency, Censor Check, Comparability Check, Crosstalk Check and the measurement-processing article.
+
+## New default workflow
+
+1. Paste or load raw CSV with `role,concentration,signal`; roles are `sample`, `neutral`, and `full`.
+2. Reconstruct independent-control normalization beside sample min–max scaling of the same wells.
+3. State the measured endpoint, exposure, source identifier and unverified evidence references.
+4. Export a source/evidence record containing the exact original CSV, control statistics, transformations, selected numerical audit and limitations.
+5. Optionally send the selected reconstruction to the curve laboratory; session JSON retains the raw-source record.
+
+The source record is `curve-check-source-v1`. Restoring it recomputes from raw observations rather than trusting saved numerical results. The SHA-256 fingerprint identifies CSV bytes, not authentic experimental provenance. Evidence fields do not certify the assay. Records with missing controls are rejected rather than patched using sample extrema.
+
+The default example has a true 20-unit response in a 100-unit control window, with independently adjustable well-noise SD. Zero effect is available. A constant-response baseline and free-4PL candidate are shown on the full control scale, with residual errors and a conditional AICc contrast. Effect/window fraction is not mislabeled as signal-to-noise. The comparison is not a calibrated significance test or a universal assay acceptance rule.
 
 ## Use the workbench
 
@@ -53,7 +67,7 @@ The first two commands require only Node.js 20 or newer. The independent referen
 
 ## Scope and provenance
 
-Version 0.2.0 is a research and teaching prototype, not a validated assay-analysis platform, clinical tool or regulatory acceptance standard. Its rules are declared teaching choices; they are not claimed as universally valid cutoffs. Confidence calculations assume independent, common-variance Gaussian concentration means and omit control and between-run uncertainty. No full implementation of Sebaugh recommendations, ICH validation, or USP relative-potency analysis is claimed.
+Version 0.3.0 is a research and teaching prototype, not a validated assay-analysis platform, clinical tool or regulatory acceptance standard. Its rules are declared teaching choices; they are not claimed as universally valid cutoffs. Confidence calculations assume independent, common-variance Gaussian concentration means and omit control and between-run uncertainty. Raw controls are retained and summarized but are NOT jointly fitted. No full implementation of Sebaugh recommendations, ICH validation, or USP relative-potency analysis is claimed.
 
 The expanded scenarios are stylized counterexamples, not automatic mechanism classifiers. An artifact scenario can pass every numerical audit. The primary artifact twins share identical observations by construction. See `web/scenarios.js` for all assigned mechanisms and idealized intervention masks. Synthetic experiment sessions retain the v1 JSON schema; old sessions remain importable. The three additional algebra laboratories are independent teaching panels and are not serialized in curve-session JSON.
 

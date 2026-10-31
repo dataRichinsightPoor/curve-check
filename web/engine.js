@@ -1,6 +1,6 @@
 // Original numerical implementation. No runtime dependencies.
 import {EXTRA_CASES} from './scenarios.js';
-export const VERSION = '0.2.0';
+export const VERSION = '0.3.0';
 export const MODES = {
   free: {name: 'Free 4PL', p: 4},
   bottom: {name: 'Bottom = 0', p: 3},

@@ -1,5 +1,18 @@
 # Curve Check verification record
 
+## Version 0.3.0 source-to-claim revision
+
+- Reviewed 12 related repository/workflow documents and the closest prior curve-fitting article. The overlap assessment and resulting scope changes are in `SERIES-OVERLAP.md`; this is not an exhaustive archive search.
+- 67/67 JavaScript tests passed. New coverage includes raw/control preservation, missing references, malformed rows, zero dose, constant signals, out-of-range retention, source-record restoration, deterministic weak-response generation, and constant-model AICc arithmetic.
+- Independent NumPy checks passed for five source fixtures: weak/high-noise, clear/low-noise, zero effect with noise, tiny effect, and exact constant. Normalization, flat-model SSE and AICc agreed; see `results/source-verification.json`. These do not calibrate statistical coverage.
+- The original logistic solver is unchanged apart from its version identifier; the earlier SciPy verification remains a record of that solver, not a new biological validation claim.
+- Browser checks exercised 20/100 effect at noise SDs 20 and 1, zero true effect, and the tiny-effect example. High-noise data favored the constant model by the displayed AICc, whereas low-noise data favored 4PL. The tool still withheld unconditional biological attribution.
+- Raw edit invalidated stale results/exports; malformed raw input was rejected. Raw-file upload, source JSON and Markdown downloads, metadata restoration and source-to-curve handoff were exercised.
+- Source-bound curve sessions restored successfully; a normalized row changed without matching the raw source was rejected. Loading an ordinary scenario cleared prior source context. Self-scaled source handoff disabled the independent-control declaration.
+- An out-of-domain normalized response remained in the raw record and could be exported, while fitting/handoff was unavailable rather than clipping the data.
+- All 28 legacy scenarios, four model modes, control-declaration cycle, full-profile cycle and dose-omission flow were exercised without browser page exceptions.
+- Desktop and 375px rendering checked after resize completion; full-window weak-response chart labels remained readable and page-level horizontal overflow was absent.
+
 ## Version 0.2.0 expansion
 
 The historical v0.1.0 checks below are retained as a previous-version record, not represented as new-version evidence.

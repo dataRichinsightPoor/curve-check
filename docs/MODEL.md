@@ -1,6 +1,18 @@
 # Curve Check: model and numerical methods
 
-Version 0.2.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation. The core fitting/audit rules are unchanged from v0.1.0; the interface now names a successful numerical result “Localized under working model” and separately marks readout validity and biological attribution unverified.
+Version 0.3.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation. The core fitting/audit rules are unchanged from v0.1.0; the interface names a successful numerical result “Localized under working model” and separately marks readout validity and biological attribution unverified.
+
+## Source reconstruction added in v0.3.0
+
+Raw CSV uses role, concentration in nM, and instrument signal. Independently declared neutral and full-effect controls are summarized by arithmetic mean and sample SD (SD unavailable for n=1). For a decreasing signal, neutral mean must exceed full-effect mean. Sample normalization is `100*(signal-fullMean)/(neutralMean-fullMean)`. The counterfactual uses sample-well extrema instead; this is never an independent definition of full inhibition.
+
+No raw observations are discarded or clipped. Both transformed sample arrays are retained. If normalized responses exceed the numerical engine's accepted domain, raw reconstruction remains exportable while fitting/handoff is unavailable; the tool does not repair the data by clipping. A constant sample series has no self-scaled branch.
+
+The raw source record preserves text, control statistics, transformed rows, metadata and selected numerical analysis. Reimport recalculates; existing curve sessions can optionally carry a source record whose normalized rows must exactly match the stored curve rows. SHA-256 identifies raw CSV bytes only, not external authenticity or evidence validity. No control uncertainty propagation or joint raw-control likelihood has been added.
+
+The weak-response generator uses a decreasing logistic signal with upper mean 100, lower mean `100-effect`, midpoint 10 nM, slope 1, and seeded independent Gaussian well noise. Each concentration has three wells and each reference eight wells. The observed window varies with sampled control noise; the true generating window is 100.
+
+The constant comparator is the equally weighted mean of concentration means. Its AICc uses k=2 (mean and variance); the free-4PL comparator uses k=5. Delta is 4PL AICc minus constant AICc, so negative favors 4PL under the assumed likelihood. This is not a significance test, and no universal acceptance cutoff is implemented. Estimated mean-level noise is the RMS of within-dose SD/sqrt(n) among replicated concentrations; range divided by that quantity is descriptive and sample-design dependent, not Z-prime or calibrated SNR.
 
 ## Data contract
 
