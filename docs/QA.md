@@ -37,4 +37,10 @@ All four export buttons produced nonempty downloads. The exported SVG parsed as 
 
 The final JavaScript suite passed 35/35 tests. All exported files and raw fixtures contain synthetic data only.
 
-Hosted-preview checks are recorded after deployment.
+## Hosted-preview checks
+
+The first preview exposed an opaque-origin restriction that blocked module-worker construction. The application now guards worker startup and uses the same local engine on the main thread when workers are unavailable; no server-side fitting or data upload is introduced.
+
+A fresh Chromium context successfully loaded the deployed preview with ten scenario choices and 39 plotted observations. Complete, truncated, partial and hook scenarios produced their expected distinct outcomes. Fitting-mode changes, control declaration changes, leave-one-dose-out, all four downloads, JSON restoration and all three tabs worked in the hosted environment without page exceptions.
+
+The hosted page was also checked at 375px after responsive SVG redraw completed. There was no document-level horizontal overflow. Downloaded hosted-preview files were saved and inspected locally; the shareable preview itself contains only the application and synthetic generators.

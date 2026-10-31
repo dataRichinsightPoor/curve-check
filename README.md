@@ -7,11 +7,13 @@ Data-Rich, Insight-Poor
 
 ## Use the workbench
 
+An interactive [Perplexity preview](https://www.perplexity.ai/computer/a/curve-check-99-small-problems-GMQCvi_DQpSRlSbM7jPyJQ) is available to the owner; its sharing permissions are managed separately from repository visibility. The source can also run locally or on any static host.
+
 ```bash
 python -m http.server 8000 --directory web
 ```
 
-Open `http://localhost:8000`. No build, login, API key or runtime package installation is required. Serve the files over HTTP rather than opening `index.html` directly because the app uses ES modules and a module worker.
+Open `http://localhost:8000`. No build, login, API key or runtime package installation is required. Serve the files over HTTP rather than opening `index.html` directly because the app uses ES modules. A module worker normally handles computation; opaque-origin previews fall back to the same engine on the browser's main thread without transmitting data.
 
 All input data and calculations stay in the browser. An optional Fontshare stylesheet loads externally; the app remains functional with fallback fonts. It uses no analytics, remote fitting endpoint or persistent browser storage.
 

@@ -1,6 +1,14 @@
-import {VERSION,CASES,MODES,generate,parseCSV,predict,format} from './engine.js';
+import {VERSION,CASES,MODES,generate,parseCSV,predict,format,audit,leaveOneDoseOut} from './engine.js';
 const $=id=>document.getElementById(id);
-const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
+// Sandboxed previews can have an opaque origin that prohibits module Workers.
+// The same pure local engine remains usable without worker privileges.
+const localRunner={postMessage(data){setTimeout(()=>{
+  try{localRunner.onmessage({data:{id:data.id,type:data.type,result:data.type==='loo'?leaveOneDoseOut(data.rows,data.mode):audit(data.rows,data.mode,data.controlsValid)}});}
+  catch(e){localRunner.onmessage({data:{id:data.id,error:e.message}});}
+},0);}};
+let worker;
+try{worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});}
+catch{worker=localRunner;}
 let rows=[],current=null,kind='synthetic',requestId=0,loo=null,report='',caseId='complete',busy=false;
 const svgNS='http://www.w3.org/2000/svg';
 function node(tag,attrs={},text=''){const el=document.createElementNS(svgNS,tag);for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);if(text)el.textContent=text;return el;}
@@ -72,7 +80,7 @@ function render(a){
 function setBusy(v){busy=v;$('busy').textContent=v?'COMPUTING':'LOCAL COMPUTATION';for(const id of ['loo','exportReport','exportCSV','exportJSON','exportSVG'])$(id).disabled=v;}
 function run(){loo=null;$('looResult').textContent='Dose-influence analysis has not been run.';$('inputError').textContent='';setBusy(true);worker.postMessage({id:++requestId,type:'audit',rows,mode:$('model').value,controlsValid:$('controlsValid').checked});}
 worker.onmessage=({data})=>{if(data.id!==requestId)return;setBusy(false);if(data.error){$('inputError').textContent=data.error;return;}if(data.type==='loo'){loo=data.result;$('looResult').textContent=`Omitting one positive-dose group at a time moves the fitted relative midpoint from ${format(loo.minimum)} to ${format(loo.maximum)} nM. ${loo.records.filter(r=>r.boundary).length} reduced fits hit a parameter bound. This is sensitivity, not a confidence interval or an exclusion rule.`;}else render(data.result);};
-worker.onerror=e=>{setBusy(false);$('inputError').textContent='Computation could not start. Serve this app over HTTP and check browser support for module workers.';console.error(e);};
+worker.onerror=e=>{e.preventDefault?.();const receive=worker.onmessage;worker.terminate?.();worker=localRunner;worker.onmessage=receive;run();};
 function rangeLabels(){$('maxValue').textContent=`${format(10**Number($('maxDose').value))} nM`;$('noiseValue').textContent=`${$('noise').value} pp`;}
 function loadCase(reset=true){caseId=$('scenario').value;const c=CASES.find(c=>c.id===caseId);if(reset){$('maxDose').value=c.max;$('noise').value=c.noise;$('seed').value=42;}rangeLabels();const seed=Number($('seed').value);if(!Number.isInteger(seed)||seed<1||seed>999999){$('inputError').textContent='Use an integer seed from 1 to 999999.';return;}rows=generate(caseId,{max:+$('maxDose').value,noise:+$('noise').value,seed});kind='synthetic';$('dataKind').textContent='SYNTHETIC';$('caseTitle').textContent=c.title;$('caseSubtitle').textContent=c.subtitle;$('controlsValid').checked=true;run();}
 CASES.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('scenario').append(o);});
