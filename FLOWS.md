@@ -1,5 +1,12 @@
 # Curve Check regression inventory
 
+## Self-contained copy-ready HTML
+
+- Copy edition preserves the complete article, publication credit, cover, three scientific figures, all equations and twelve references.
+- Copy complete article attempts synchronous native rich copying before permission-gated APIs; paste into an editable surface must retain paragraphs, images, equations and links.
+- Test downloaded HTML with no network, selection fallback, individual image downloads and a sandboxed preview. Do not equate generic rich-text paste with LinkedIn image ingestion.
+- Copy excludes controls; all image sources are embedded PNGs. Downloaded HTML has no runtime dependencies or expiring asset URLs.
+
 ## Publication-length interactive reading edition
 
 - Publication credit reads “Data-Rich, Insight-Poor · No. CCLXVIII” and “99 Small Problems · Installment 09” in the cover, navigation/footer, Markdown, workbench article tab and repository introduction; check mobile wrapping and regenerate the social-cover PNG.

@@ -1,5 +1,11 @@
 # Curve Check verification record
 
+## Copy-ready HTML edition
+
+The standalone publishing edition embeds its cover, three scientific figures and four display equations as PNGs. Eighteen inline expressions use ordinary Unicode text; the plain-text clipboard representation retains their TeX. The article has no runtime network dependencies.
+
+Native copy followed by a real Ctrl+V paste into a Chromium contenteditable surface retained eight images, 53 paragraphs and 35 links, with no copied controls. The same eight images survived paste tests from downloaded HTML with the browser offline and from an opaque-origin sandboxed iframe. These tests did not grant asynchronous clipboard permissions. Selection fallback and desktop/mobile layout were checked separately. This is not a test of LinkedIn's ingestion pipeline: destination editors can drop images, so the page provides individual downloads for the cover, figures and display equations.
+
 ## Interactive publication edition
 
 The shortened article contains approximately 2,600 whitespace-delimited words including twelve references. The extended edition is retained separately. The new cover is AI-generated editorial artwork, not the uploaded inspiration image or experimental data.

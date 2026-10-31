@@ -5,6 +5,10 @@ Data-Rich, Insight-Poor · No. CCLXVIII
 
 [Read the interactive article](https://dataRichinsightPoor.github.io/curve-check/article.html) · [Open the workbench](https://dataRichinsightPoor.github.io/curve-check/) · [MIT License](LICENSE)
 
+[Open the copy-ready HTML edition](https://dataRichinsightPoor.github.io/curve-check/copy.html) for publishing: one native rich-copy button, selection fallback, a self-contained HTML download, and individual image downloads if a destination editor drops pasted images. Figures and display equations are embedded PNGs; inline expressions use ordinary Unicode text, and plain-text copying preserves equation TeX. Destination-editor image ingestion is not guaranteed.
+
+To rebuild that standalone edition after article edits, run `npm ci`, `npx playwright install chromium`, then `npm run build:copy`. Playwright is a build-time dependency only; the delivered HTML works offline without it.
+
 ![Curve Check editorial cover: an elegant curve suspended above fragile evidence. AI-generated illustration, not experimental data.](web/assets/curve-check-cover.webp)
 
 **Trace the evidence. Then report the IC50.** Curve Check v0.4.0 reconstructs a one-run concentration-response record from raw sample and control observations through normalization to a conditional claim. Its distinct job in the series is preserving that source-to-claim chain, not supplying another general curve fitter or comparability checklist.

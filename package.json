@@ -4,10 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:copy": "node scripts/build-article.mjs && node scripts/build-copy.mjs",
     "test": "node --test tests/*.test.mjs",
     "fixtures": "node scripts/export-fixtures.mjs"
   },
   "devDependencies": {
-    "katex": "0.18.2"
+    "katex": "0.18.2",
+    "playwright": "1.64.1"
   }
 }
