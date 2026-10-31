@@ -12,6 +12,9 @@
 - An out-of-domain normalized response remained in the raw record and could be exported, while fitting/handoff was unavailable rather than clipping the data.
 - All 28 legacy scenarios, four model modes, control-declaration cycle, full-profile cycle and dose-omission flow were exercised without browser page exceptions.
 - Desktop and 375px rendering checked after resize completion; full-window weak-response chart labels remained readable and page-level horizontal overflow was absent.
+- Hosted v0.3.0 loaded in a fresh cloud-browser session with opaque origin. The weak-response/flat comparison, source JSON and Markdown downloads, self-scaled handoff and disabled independent-control declaration worked. Article copy, download and predecessor citation navigation worked.
+- The public app wrapper required sign-in in the unauthenticated cloud session; hosted function checks used the deployment tool's QA URL.
+- Local source-record file restore passed. Hosted automated file upload could not be verified: the cloud browser's fixture upload produced a file-read permission error. No claim of successful hosted file-upload verification is made. The cloud session also expired once between calls and was reopened.
 
 ## Version 0.2.0 expansion
 
