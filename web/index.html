@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Curve Check: a local-first IC50 reporting audit. 99 Small Problems, installment 09.">
+  <title>Curve Check | 99 Small Problems 09</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="#workbench">DATA-RICH, INSIGHT-POOR</a>
+  <span class="series">99 SMALL PROBLEMS <b>09</b></span>
+  <a href="https://github.com/dataRichinsightPoor/curve-check" target="_blank" rel="noopener">Code &amp; methods ↗</a>
+</header>
+<main id="workbench">
+  <section class="intro">
+    <div><p class="eyebrow">AN ASSAY-SUPPORTED REPORTING WORKBENCH</p><h1>Is it a curve?<br>Can we report the IC50?</h1></div>
+    <div class="intro-note"><p>Fitting a line is a computation.<br> Reporting a potency is an inference.</p><p class="muted">Compare what the data locate with what the model assumes. Synthetic examples first; your own normalized data when ready.</p></div>
+  </section>
+  <nav class="tabs" aria-label="Workbench sections">
+    <button data-tab="lab" class="active" aria-selected="true" role="tab">Curve laboratory</button>
+    <button data-tab="guide" aria-selected="false" role="tab">Reporting guide</button>
+    <button data-tab="methods" aria-selected="false" role="tab">Methods &amp; evidence</button>
+  </nav>
+  <section id="lab" class="tab-panel">
+    <div class="work-grid">
+      <aside class="controls">
+        <div class="section-label"><span>01 / EXPERIMENT</span><span class="tag" id="dataKind">SYNTHETIC</span></div>
+        <label for="scenario">Choose a failure mode</label><select id="scenario"></select>
+        <p id="caseSubtitle" class="muted"></p>
+        <div class="slider-row"><label for="maxDose">Highest tested concentration</label><output id="maxValue"></output></div>
+        <input id="maxDose" type="range" min="0" max="4" step=".25" value="4">
+        <div class="slider-row"><label for="noise">Synthetic noise SD</label><output id="noiseValue"></output></div>
+        <input id="noise" type="range" min="0" max="15" step=".5" value="3">
+        <label for="seed">Random seed</label><input id="seed" type="number" min="1" max="999999" value="42">
+        <button id="generate" class="secondary">Regenerate experiment</button>
+        <p class="fine">13 log-spaced doses, 3 wells per dose. Range changes redistribute the dose grid. All example parameters are illustrative.</p>
+        <div class="divider"></div>
+        <div class="section-label">02 / FITTING ASSUMPTION</div>
+        <label for="model">Model under inspection</label>
+        <select id="model"><option value="free">Free 4PL</option><option value="bottom">3PL: bottom fixed at 0</option><option value="both">2PL: top 100, bottom 0</option><option value="slope">3PL: Hill slope fixed at 1</option></select>
+        <label class="check"><input id="controlsValid" type="checkbox" checked><span>0% and 100% references are defined and controls are acceptable</span></label>
+        <p class="fine">Checked for synthetic examples. For your data, this is a user declaration, not automated assay validation.</p>
+        <details class="data-entry"><summary>Use your own data</summary>
+          <p class="fine">One curve from one run. Remaining activity (% of independently defined controls), concentration in nM. Repeat rows retain wells; zero dose is handled exactly. Do not combine biological runs.</p>
+          <label for="csv">CSV: concentration,response</label>
+          <textarea id="csv" rows="8" spellcheck="false" placeholder="concentration,response&#10;0,100&#10;0.1,98&#10;1,90&#10;10,50&#10;100,12&#10;1000,3"></textarea>
+          <button id="applyCSV" class="secondary">Audit pasted data</button>
+          <label for="csvFile">Or load CSV locally</label><input id="csvFile" type="file" accept=".csv,.tsv,.txt">
+          <p class="fine">No input data are uploaded. Use only data you are authorized to handle here.</p>
+        </details>
+        <p id="inputError" class="error" role="alert"></p>
+      </aside>
+      <div class="results">
+        <section class="chart-panel">
+          <div class="panel-title"><div><span class="section-label">03 / OBSERVATIONS &amp; FIT</span><h2 id="caseTitle">A well-resolved response</h2></div><span id="busy" class="tag" role="status">COMPUTING</span></div>
+          <div class="legend"><span><i class="dot"></i> Individual wells</span><span><i class="line"></i> Selected model</span><span><i class="dashed"></i> Other assumptions</span><span>··· 50% control response</span></div>
+          <div id="curveChart" class="chart" aria-label="Dose-response observations and fitted curves"></div>
+          <p id="chartCaption" class="fine"></p>
+        </section>
+        <div class="decision-grid" aria-live="polite">
+          <section class="decision"><span class="section-label">RELATIVE MIDPOINT</span><h3 id="relStatus">Computing</h3><p id="relValue" class="value"></p><p id="relText"></p></section>
+          <section class="decision"><span class="section-label">CONTROL-DEFINED 50%</span><h3 id="absStatus">Computing</h3><p id="absValue" class="value"></p><p id="absText"></p></section>
+        </div>
+        <section class="insight"><p id="lesson"></p><p><b>Next discriminating experiment.</b> <span id="next"></span></p></section>
+      </div>
+    </div>
+    <section class="diagnostics">
+      <div class="panel-title"><div><span class="section-label">04 / TRY TO BREAK THE ESTIMATE</span><h2>The fit is not the evidence audit</h2></div><button id="loo" class="secondary">Run leave-one-dose-out</button></div>
+      <div class="two-charts">
+        <section><h3>Relative-midpoint likelihood profile</h3><div id="profileChart" class="chart mini"></div><label class="check fine"><input id="fullProfile" type="checkbox"><span>Show full numerical search range</span></label><p class="fine">Finite profiles are zoomed by default. Other free parameters are reoptimized at every midpoint. Dashed cutoff: approximate 95% likelihood-ratio threshold. Open ends remain unresolved; this is not a biological-repeat interval.</p></section>
+        <section><h3>Residuals against concentration</h3><div id="residualChart" class="chart mini"></div><p class="fine">Concentration-mean residuals, in percentage points. Structure can reveal what a smooth fitted line conceals. Zero-dose means participate in fitting and are described separately.</p></section>
+      </div>
+      <div class="table-wrap"><table><caption>Assumption sensitivity, not an automatic model competition</caption><thead><tr><th>Model</th><th>Relative IC50, nM</th><th>Bottom / top, %</th><th>Hill slope</th><th>Mean RMSE</th><th>ΔAICc</th></tr></thead><tbody id="modelTable"></tbody></table></div>
+      <p class="fine">AICc uses the same concentration means and includes the estimated variance parameter. It is unavailable when sample size is insufficient. Choosing a constraint because it looks precise is not independent evidence for that constraint.</p>
+      <div class="audit-grid"><section><h3>Review flags</h3><ul id="flags"></ul><p id="looResult" class="muted">Dose-influence analysis has not been run.</p></section><section><h3>Draft reporting language</h3><p id="reportText" class="report"></p><p class="fine">A draft for review, not assay certification. The software cannot verify controls, mechanism, sample provenance or experimental independence.</p></section></div>
+      <div class="exports"><button id="exportReport">Download audit (.md)</button><button id="exportCSV" class="secondary">Export data (.csv)</button><button id="exportJSON" class="secondary">Export session (.json)</button><button id="exportSVG" class="secondary">Export chart (.svg)</button><label class="file-button" for="sessionFile">Restore session<input id="sessionFile" type="file" accept=".json"></label></div>
+      <p id="exportStatus" class="fine" role="status"></p>
+    </section>
+  </section>
+  <section id="guide" class="tab-panel reading" hidden>
+    <p class="eyebrow">REPORT THE QUANTITY THE EXPERIMENT SUPPORTS</p><h2>“Not estimable” is a result, not a software failure.</h2>
+    <p>A relative IC50 is halfway between the fitted asymptotes. A control-defined IC50 is the concentration at a predeclared 50% response level. These need not coincide, and the second may not exist even when the first is well resolved. <a href="https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm" target="_blank" rel="noopener">GraphPad’s definition guide ↗</a></p>
+    <div class="guide-grid">
+      <article><span class="section-label">LOCALIZED TRANSITION</span><h3>Report an estimate, with its conditions.</h3><p>Declare the endpoint, controls, units, exposure, model and constraints. Show observations, uncertainty and the attainable effect. An observed threshold bracket is not itself a confidence interval. <a href="https://www.ncbi.nlm.nih.gov/sites/books/n/assayguide/assayops/" target="_blank" rel="noopener">Assay Guidance Manual ↗</a></p></article>
+      <article><span class="section-label">OUTSIDE THE TESTED RANGE</span><h3>Separate a bound from no finite crossing.</h3><p>“50% inhibition not observed through 10 µM” is weaker and often safer than claiming a finite IC50 above 10 µM. A justified &gt; or &lt; bound must state its assumptions; a partial-effect plateau may never cross the reference. <a href="https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm" target="_blank" rel="noopener">Relative and absolute thresholds ↗</a></p></article>
+      <article><span class="section-label">WRONG RESPONSE SHAPE</span><h3>Do not force one sigmoid.</h3><p>Rebounds, biphasic responses and strong residual structure challenge a monotone 4PL. More flexible models can be useful, but introduce additional parameters and new identifiability demands. <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146021" target="_blank" rel="noopener">Ritz et al., 2015 ↗</a></p></article>
+      <article><span class="section-label">GOOD FIT, WRONG BIOLOGY</span><h3>Report the measured response, not a mechanism.</h3><p>Aggregation, reporter interference, depletion and incubation history can produce convincing concentration responses. IC50 is assay-dependent and is not automatically Ki, affinity or evidence of target engagement. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6570549/" target="_blank" rel="noopener">Tonge, 2019 ↗</a></p></article>
+    </div>
+    <h3>What this prototype intentionally refuses to decide</h3><p>The flags are conservative, declared teaching heuristics, not universal pharmacological or regulatory criteria. A model with no flag is not validated, and a flag does not prove an assay is unusable. Formal inference requires an assay-specific analysis plan and an appropriate sampling and error model.</p>
+    <p>For repeated experiments, keep run identity and estimate between-run variability. For dividing cells, consider growth-rate-aware endpoints rather than interpreting endpoint viability as a direct measure of death. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9007438/" target="_blank" rel="noopener">Tansey et al. ↗</a> · <a href="https://lincs.hms.harvard.edu/hafner-natmethods-2016/" target="_blank" rel="noopener">Hafner et al., 2016 ↗</a></p>
+  </section>
+  <section id="methods" class="tab-panel reading" hidden>
+    <p class="eyebrow">INSPECTABLE MATHEMATICS / DECLARED LIMITATIONS</p><h2>What the tool actually computes</h2>
+    <p class="equation">y(x) = B + (T − B) / [1 + (x / 10ᵐ)ʰ]</p>
+    <p>The decreasing 4PL uses bottom B, top T, log10 relative midpoint m, and positive Hill slope h. At zero concentration the limit is T; zero is never replaced by a tiny artificial dose. Wells are averaged within concentration, then each concentration mean receives equal weight.</p>
+    <p>The conditional bottom/top problem is solved by bounded linear least squares. A coarse midpoint/slope search is refined numerically. Numerical domains: −50 ≤ B ≤ T ≤ 150%, 0.1 ≤ h ≤ 5, and m within four log units beyond the tested positive concentration range. These are computational restrictions, not learned biological facts.</p>
+    <p class="equation">LR(m) = n ln[SSE(m) / SSEmin] ≤ 3.84146</p>
+    <p>With independent Gaussian concentration means of common unknown variance, the profile likelihood reoptimizes the other parameters at fixed m. The cutoff is an asymptotic, one-parameter likelihood-ratio approximation. Small samples, boundaries, heteroscedasticity, shared normalization and model mismatch can invalidate nominal coverage; this app does not calibrate that coverage. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6347253/" target="_blank" rel="noopener">Profile-likelihood methodology ↗</a></p>
+    <p>The control-defined threshold is solved separately as x₅₀ = 10ᵐ[(T−50)/(50−B)]¹/ʰ, only if B &lt; 50 &lt; T. Its preferred displayed value is a local linear interpolation in log concentration between adjacent measured means bracketing 50%. That tested-dose bracket is not a confidence interval. No absolute-IC50 confidence interval is computed.</p>
+    <h3>Audit rules, version 0.1.0</h3><p>Relative support requires at least seven positive doses, one descending crossing of the fitted midpoint response, an in-range midpoint, no parameter-bound hit, and a finite connected relative profile no wider than two log units. The observed response span must exceed max(10 percentage points, 3 × estimated mean-level noise). An upward reversal larger than max(8, 3 × noise), or mean RMSE greater than max(8, 2 × noise), triggers review.</p>
+    <p>Mean-level noise is the RMS of within-dose SD/√replicate count across replicated concentrations. It is descriptive and assumes wells are independently noisy; it does not measure between-run reproducibility. Numerical rules are original teaching choices and are not recommendations attributed to a guideline.</p>
+    <h3>Evidence behind the questions</h3>
+    <ol class="evidence">
+      <li><a href="https://www.ncbi.nlm.nih.gov/sites/books/n/assayguide/assayops/" target="_blank" rel="noopener">Beck et al. Assay Operations for SAR Support.</a> Interpolation, reporting bounds, replication and curve constraints.</li>
+      <li><a href="https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm" target="_blank" rel="noopener">GraphPad. 50% of what?</a> Relative versus control-defined midpoints and partial response.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6570549/" target="_blank" rel="noopener">Tonge, 2019. Quantifying interactions between biomolecules.</a> Mechanistic context, depletion, assay artifacts and time dependence.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2892436/" target="_blank" rel="noopener">Spiess &amp; Neumeyer, 2010.</a> Why a high R² does not select or validate a nonlinear model.</li>
+      <li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146021" target="_blank" rel="noopener">Ritz et al., 2015. Dose-Response Analysis Using R.</a> Model families, inference, residuals and dose zero.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6347253/" target="_blank" rel="noopener">Ren &amp; Xia, 2019.</a> Profile likelihood with nuisance-parameter reoptimization.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9007438/" target="_blank" rel="noopener">Tansey et al. End-to-end dose-response modeling.</a> Control uncertainty, dependence and batch effects.</li>
+      <li><a href="https://lincs.hms.harvard.edu/hafner-natmethods-2016/" target="_blank" rel="noopener">Hafner et al., 2016.</a> Division-rate confounding of endpoint response metrics.</li>
+      <li><a href="https://www.ncbi.nlm.nih.gov/sites/books/NBK442297/" target="_blank" rel="noopener">Assay Guidance Manual. Assay Interference by Aggregation.</a> Artifact mechanisms and discriminating counterscreens.</li>
+    </ol>
+    <p>All examples are synthetic. Computation is local to your browser; external fonts may load, but input data are not transmitted. Numerical testing verifies implementation, not biological validity. Original code and documentation: MIT license. External literature retains its own terms.</p>
+  </section>
+</main>
+<footer><span>CURVE CHECK / v0.1.0</span><span>Useful models for assumptions with expensive ambitions.</span><span>RESEARCH PROTOTYPE · NOT ASSAY VALIDATION</span></footer>
+<script type="module" src="app.js"></script>
+</body></html>

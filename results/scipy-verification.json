@@ -1,0 +1,288 @@
+{
+  "fit_checks": 40,
+  "profile_checks": 40,
+  "maximum_absolute_sse_difference": 1.5636203443136765e-10,
+  "records": [
+    {
+      "case": "complete",
+      "mode": "free",
+      "javascript_sse": 34.26705489906428,
+      "scipy_sse": 34.26705489903728,
+      "absolute_sse_difference": 2.7000623958883807e-11
+    },
+    {
+      "case": "complete",
+      "mode": "bottom",
+      "javascript_sse": 83.1570614459268,
+      "scipy_sse": 83.15706144579651,
+      "absolute_sse_difference": 1.3028511602897197e-10
+    },
+    {
+      "case": "complete",
+      "mode": "both",
+      "javascript_sse": 117.90715718112364,
+      "scipy_sse": 117.90715718100047,
+      "absolute_sse_difference": 1.2316547781665577e-10
+    },
+    {
+      "case": "complete",
+      "mode": "slope",
+      "javascript_sse": 38.7298217976401,
+      "scipy_sse": 38.72982179749413,
+      "absolute_sse_difference": 1.4596679420719738e-10
+    },
+    {
+      "case": "truncated",
+      "mode": "free",
+      "javascript_sse": 47.64603984433209,
+      "scipy_sse": 47.64603984433418,
+      "absolute_sse_difference": 2.0961010704922955e-12
+    },
+    {
+      "case": "truncated",
+      "mode": "bottom",
+      "javascript_sse": 47.7676807374374,
+      "scipy_sse": 47.76768073743728,
+      "absolute_sse_difference": 1.2079226507921703e-13
+    },
+    {
+      "case": "truncated",
+      "mode": "both",
+      "javascript_sse": 57.27200317964142,
+      "scipy_sse": 57.27200317964122,
+      "absolute_sse_difference": 2.0605739337042905e-13
+    },
+    {
+      "case": "truncated",
+      "mode": "slope",
+      "javascript_sse": 51.073399417937075,
+      "scipy_sse": 51.073399417936855,
+      "absolute_sse_difference": 2.2026824808563106e-13
+    },
+    {
+      "case": "partial",
+      "mode": "free",
+      "javascript_sse": 15.422186160682159,
+      "scipy_sse": 15.422186160682088,
+      "absolute_sse_difference": 7.105427357601002e-14
+    },
+    {
+      "case": "partial",
+      "mode": "bottom",
+      "javascript_sse": 406.0707575651513,
+      "scipy_sse": 406.0707575651495,
+      "absolute_sse_difference": 1.8189894035458565e-12
+    },
+    {
+      "case": "partial",
+      "mode": "both",
+      "javascript_sse": 770.8229419467275,
+      "scipy_sse": 770.8229419467243,
+      "absolute_sse_difference": 3.183231456205249e-12
+    },
+    {
+      "case": "partial",
+      "mode": "slope",
+      "javascript_sse": 19.73005811357169,
+      "scipy_sse": 19.73005811357105,
+      "absolute_sse_difference": 6.394884621840902e-13
+    },
+    {
+      "case": "flat",
+      "mode": "free",
+      "javascript_sse": 16.63092808672504,
+      "scipy_sse": 16.630928086736876,
+      "absolute_sse_difference": 1.1837641977763269e-11
+    },
+    {
+      "case": "flat",
+      "mode": "bottom",
+      "javascript_sse": 22.56948094484197,
+      "scipy_sse": 22.56948094484309,
+      "absolute_sse_difference": 1.1191048088221578e-12
+    },
+    {
+      "case": "flat",
+      "mode": "both",
+      "javascript_sse": 25.81507172646079,
+      "scipy_sse": 25.81507172646087,
+      "absolute_sse_difference": 8.171241461241152e-14
+    },
+    {
+      "case": "flat",
+      "mode": "slope",
+      "javascript_sse": 17.98268049204113,
+      "scipy_sse": 17.98268049204105,
+      "absolute_sse_difference": 7.815970093361102e-14
+    },
+    {
+      "case": "left",
+      "mode": "free",
+      "javascript_sse": 18.68899301235466,
+      "scipy_sse": 18.688993012361788,
+      "absolute_sse_difference": 7.126743639673805e-12
+    },
+    {
+      "case": "left",
+      "mode": "bottom",
+      "javascript_sse": 18.78389817163266,
+      "scipy_sse": 18.78389817163264,
+      "absolute_sse_difference": 2.1316282072803006e-14
+    },
+    {
+      "case": "left",
+      "mode": "both",
+      "javascript_sse": 18.784553842563678,
+      "scipy_sse": 18.784553842563664,
+      "absolute_sse_difference": 1.4210854715202004e-14
+    },
+    {
+      "case": "left",
+      "mode": "slope",
+      "javascript_sse": 19.130314734126127,
+      "scipy_sse": 19.130314734126085,
+      "absolute_sse_difference": 4.263256414560601e-14
+    },
+    {
+      "case": "hook",
+      "mode": "free",
+      "javascript_sse": 9527.725180899017,
+      "scipy_sse": 9527.725180898982,
+      "absolute_sse_difference": 3.456079866737127e-11
+    },
+    {
+      "case": "hook",
+      "mode": "bottom",
+      "javascript_sse": 16113.545552183346,
+      "scipy_sse": 16113.54555218334,
+      "absolute_sse_difference": 7.275957614183426e-12
+    },
+    {
+      "case": "hook",
+      "mode": "both",
+      "javascript_sse": 16490.51934012904,
+      "scipy_sse": 16490.519340129038,
+      "absolute_sse_difference": 3.637978807091713e-12
+    },
+    {
+      "case": "hook",
+      "mode": "slope",
+      "javascript_sse": 10076.455428580279,
+      "scipy_sse": 10076.455428580264,
+      "absolute_sse_difference": 1.4551915228366852e-11
+    },
+    {
+      "case": "shallow",
+      "mode": "free",
+      "javascript_sse": 41.117023825312046,
+      "scipy_sse": 41.11702382531186,
+      "absolute_sse_difference": 1.8474111129762605e-13
+    },
+    {
+      "case": "shallow",
+      "mode": "bottom",
+      "javascript_sse": 41.72532222567667,
+      "scipy_sse": 41.72532222567607,
+      "absolute_sse_difference": 6.039613253960852e-13
+    },
+    {
+      "case": "shallow",
+      "mode": "both",
+      "javascript_sse": 48.05144381228011,
+      "scipy_sse": 48.0514438122685,
+      "absolute_sse_difference": 1.1610268302320037e-11
+    },
+    {
+      "case": "shallow",
+      "mode": "slope",
+      "javascript_sse": 495.79601199764164,
+      "scipy_sse": 495.79601199763925,
+      "absolute_sse_difference": 2.3874235921539366e-12
+    },
+    {
+      "case": "steep",
+      "mode": "free",
+      "javascript_sse": 15.430785877428669,
+      "scipy_sse": 15.430785877450589,
+      "absolute_sse_difference": 2.192024339819909e-11
+    },
+    {
+      "case": "steep",
+      "mode": "bottom",
+      "javascript_sse": 15.544492369384097,
+      "scipy_sse": 15.54449236936609,
+      "absolute_sse_difference": 1.800692928100034e-11
+    },
+    {
+      "case": "steep",
+      "mode": "both",
+      "javascript_sse": 25.838439010317455,
+      "scipy_sse": 25.838439010161093,
+      "absolute_sse_difference": 1.5636203443136765e-10
+    },
+    {
+      "case": "steep",
+      "mode": "slope",
+      "javascript_sse": 2271.66741903346,
+      "scipy_sse": 2271.667419033454,
+      "absolute_sse_difference": 6.366462912410498e-12
+    },
+    {
+      "case": "outlier",
+      "mode": "free",
+      "javascript_sse": 1046.8984311548654,
+      "scipy_sse": 1046.8984311548568,
+      "absolute_sse_difference": 8.640199666842818e-12
+    },
+    {
+      "case": "outlier",
+      "mode": "bottom",
+      "javascript_sse": 1049.8255920563938,
+      "scipy_sse": 1049.825592056354,
+      "absolute_sse_difference": 3.979039320256561e-11
+    },
+    {
+      "case": "outlier",
+      "mode": "both",
+      "javascript_sse": 1075.2355814405603,
+      "scipy_sse": 1075.2355814405314,
+      "absolute_sse_difference": 2.887645678129047e-11
+    },
+    {
+      "case": "outlier",
+      "mode": "slope",
+      "javascript_sse": 1266.0988700784992,
+      "scipy_sse": 1266.0988700784699,
+      "absolute_sse_difference": 2.9331204132176936e-11
+    },
+    {
+      "case": "hetero",
+      "mode": "free",
+      "javascript_sse": 182.44925926049677,
+      "scipy_sse": 182.44925926049507,
+      "absolute_sse_difference": 1.7053025658242404e-12
+    },
+    {
+      "case": "hetero",
+      "mode": "bottom",
+      "javascript_sse": 217.24800162643788,
+      "scipy_sse": 217.24800162635736,
+      "absolute_sse_difference": 8.051870281633455e-11
+    },
+    {
+      "case": "hetero",
+      "mode": "both",
+      "javascript_sse": 582.4267729474074,
+      "scipy_sse": 582.4267729473826,
+      "absolute_sse_difference": 2.4783730623312294e-11
+    },
+    {
+      "case": "hetero",
+      "mode": "slope",
+      "javascript_sse": 221.2874941600359,
+      "scipy_sse": 221.28749416003268,
+      "absolute_sse_difference": 3.211653165635653e-12
+    }
+  ],
+  "scope": "Independent numerical agreement on synthetic fixtures, not biological validation."
+}
