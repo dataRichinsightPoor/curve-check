@@ -2,7 +2,9 @@
 
 ## What went into the curve?
 
-Data-Rich, Insight-Poor · 99 Small Problems, installment 09. Companion to Curve Check v0.4.0 · October 31, 2026.
+Data-Rich, Insight-Poor · No. CCLXVIII  
+99 Small Problems · Installment 09  
+Companion to Curve Check v0.4.0 · October 31, 2026.
 
 I am looking at a concentration series that barely persuades me it is different from a flat line. The assay has a one-hundred-unit reference window; the underlying response in this synthetic experiment changes by twenty, while individual wells carry a noise standard deviation of twenty units. The software nevertheless returns a smooth logistic curve and a midpoint. It has done the fitting. Whether we have measured a reportable potency remains somebody else’s problem, unless the workflow has quietly eliminated that somebody.
 

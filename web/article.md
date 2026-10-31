@@ -1,6 +1,7 @@
 # Is It a Curve, and Can We Report the IC50?
 
-Data-Rich, Insight-Poor · 99 Small Problems, installment 09. Companion to Curve Check.
+Data-Rich, Insight-Poor · No. CCLXVIII  
+99 Small Problems · Installment 09
 
 ![Cover. Polished certainty suspended above fragile evidence. AI-generated editorial illustration; not a chart or experimental result.](assets/curve-check-cover.webp)
 

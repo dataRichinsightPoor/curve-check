@@ -2,6 +2,8 @@
 
 ## Publication-length interactive reading edition
 
+- Publication credit reads “Data-Rich, Insight-Poor · No. CCLXVIII” and “99 Small Problems · Installment 09” in the cover, navigation/footer, Markdown, workbench article tab and repository introduction; check mobile wrapping and regenerate the social-cover PNG.
+
 - Open article.html: readable paper-and-jade cover, clearly labeled AI artwork; user-provided image absent.
 - Main story remains concise, with four central equations, three computed figures, twelve references, and an introductory tool/code section. Extended edition remains in docs.
 - Reading links navigate to the intended headings, experiment, full workbench, code and MIT license.

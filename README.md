@@ -1,7 +1,7 @@
 # Curve Check
 
-99 Small Problems · Installment 09  
-Data-Rich, Insight-Poor
+Data-Rich, Insight-Poor · No. CCLXVIII  
+99 Small Problems · Installment 09
 
 [Read the interactive article](https://dataRichinsightPoor.github.io/curve-check/article.html) · [Open the workbench](https://dataRichinsightPoor.github.io/curve-check/) · [MIT License](LICENSE)
 
