@@ -1,10 +1,22 @@
 # Curve Check regression inventory
 
+## Publication-length interactive reading edition
+
+- Open article.html: readable paper-and-jade cover, clearly labeled AI artwork; user-provided image absent.
+- Main story remains concise, with four central equations, three computed figures, twelve references, and an introductory tool/code section. Extended edition remains in docs.
+- Reading links navigate to the intended headings, experiment, full workbench, code and MIT license.
+- Experiment presets produce A20/SD20 = 0.04×, A20/SD1 = 16×, A0/SD20 = 0×. Flat has no midpoint; A50 has no finite absolute crossing; A100 gives absolute IC50 10 nM.
+- Amplitude/noise sliders update continuously, expose units and assumptions, and mark presets with aria-pressed. Code inspector expands and collapses.
+- Copy retains four embedded images, math and citations but excludes navigation, controls and interactive-only content. Clipboard fallback remains selectable. Markdown download equals canonical article.
+- Article desktop, 390px mobile, short desktop and desktop/mobile/desktop resizing have no page overflow; equations and wide figures scroll internally.
+- Existing workbench, all tab navigation, source-to-curve transfer, export/restore, scenarios, model choices, artifact labs and article exports still work.
+- Public repository is MIT-licensed; GitHub Pages serves both pages; no user dataset, private credential or uploaded inspiration image is published.
+
 ## Illustrated mathematical article
 
 - Three reproducible original SVG figures, not the uploaded image; each has a readable caption and full-size link.
-- Seven display equations and inline equations render with self-hosted KaTeX CSS/fonts and accessible MathML.
-- Reference list separates papers, editorial, industry white paper, official ICH text, USP previews, and documentation.
+- The publication cut retains four central display equations and inline equations with self-hosted KaTeX CSS/fonts and accessible MathML.
+- The publication cut has twelve references, distinguishing research, assay guidance, industry recommendations, and official ICH text. The extended edition preserves the fuller bibliography.
 - Copy button retains citations, converts equations to MathML for rich copy and TeX for plain text; portable HTML embeds figures as PNG data URIs rather than temporary preview URLs. Editor compatibility is explicitly qualified.
 - Article download matches canonical Markdown; source repository includes figures beside it. Mobile figure and equation scrolling stays within the article, not the page.
 - Nested source-to-curve session restore retains only verified simulation recipes.

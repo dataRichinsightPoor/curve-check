@@ -1,4 +1,5 @@
 #articleBody figure{margin:36px 0}
+#articleBody .article-cover img{width:100%;min-width:0;height:auto}
 #articleBody .figure-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:5px;background:#f8faf7}
 #articleBody figure img{display:block;width:100%;min-width:600px;height:auto}
 #articleBody figcaption{font:14px/1.7 var(--font);color:var(--muted);margin-top:14px}

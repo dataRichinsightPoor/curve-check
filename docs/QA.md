@@ -1,5 +1,15 @@
 # Curve Check verification record
 
+## Interactive publication edition
+
+The shortened article contains approximately 2,600 whitespace-delimited words including twelve references. The extended edition is retained separately. The new cover is AI-generated editorial artwork, not the uploaded inspiration image or experimental data.
+
+The 79-test JavaScript suite passed. Reading-page browser checks covered all three presets, amplitude 0/50/100, the upper noise limit, code disclosure, desktop-to-mobile-to-desktop resizing, a short desktop window, and copy/download. Rich copy contained four embedded PNG images and accessible math, excluded interactive controls, and preserved TeX in plain text. The downloaded Markdown matched the canonical article byte for byte. No page exceptions or document-level horizontal overflow were observed in those checks.
+
+Desktop, 390px mobile, interactive-panel and reference-section screenshots were visually inspected. The small/noisy preset displayed 0.04× relative information, small/precise 16×, and flat/noisy 0× with no defined midpoint. Amplitude 50 had no finite absolute crossing; amplitude 100 gave an absolute IC50 of 10 nM. These are analytical-model checks, not validation of assay data or uncertainty coverage.
+
+Before publication, repository file paths and textual history were reviewed for uploaded images, employer references and common credential patterns. Only the generated cover and project material were included. The repository was made public under its existing MIT License at the user's explicit request.
+
 ## Version 0.4.0: weak-response and illustrated-article revision
 
 Verified October 31, 2026. Earlier entries below are historical and retain the test counts and scope of their respective versions.
