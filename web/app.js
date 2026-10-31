@@ -122,7 +122,7 @@ $('sessionFile').addEventListener('change',async e=>{
       const s=restoreSource(d.sourceRecord);
       const normalized=parseCSV('concentration,response\n'+s.result.variants[s.rule].map(r=>`${r.x},${r.y}`).join('\n'));
       if(JSON.stringify(normalized)!==JSON.stringify(parsed))throw Error('Source reconstruction does not match the stored normalized observations.');
-      restoredSource={schema:d.sourceRecord.schema,rawCSV:s.rawCSV,rule:s.rule,scope:s.scope,metadata:s.metadata,verification:'Restored raw source recomputed; external identity and notes remain unverified.'};
+      restoredSource={schema:d.sourceRecord.schema,rawCSV:s.rawCSV,rule:s.rule,scope:s.scope,metadata:s.metadata,simulation:s.simulation,verification:'Restored raw source recomputed; external identity and notes remain unverified.'};
     }
     sourceRecord=restoredSource;rows=parsed;kind=d.kind==='synthetic'?'synthetic':'user';caseId=CASES.some(c=>c.id===d.caseId)?d.caseId:'complete';
     $('scenario').value=caseId;$('model').value=d.model;$('controlsValid').checked=d.controlsValid===true;$('dataKind').textContent=kind==='synthetic'?'SYNTHETIC':'USER DATA';

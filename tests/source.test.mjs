@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SOURCE_SCHEMA,parseRaw,reconstruct,sourceConclusion,sourceDemo,weakSignalDemo,signalAudit,restoreSource} from '../web/source-engine.js';
+import {SOURCE_SCHEMA,parseRaw,reconstruct,sourceConclusion,sourceDemo,weakSignalDemo,signalAudit,restoreSource,verifiedSimulation} from '../web/source-engine.js';
 import {audit} from '../web/engine.js';
 const text=sourceDemo();
 test('raw reconstruction retains all samples and independent control observations',()=>{
@@ -58,4 +58,30 @@ test('constant-model AICc uses two parameters on the same concentration means',(
 });
 test('weak-response generator rejects invalid effect and noise settings',()=>{
  assert.throws(()=>weakSignalDemo(101,1));assert.throws(()=>weakSignalDemo(20,-1));
+});
+test('edge contrast uses fixed disjoint positive-dose groups, not observed extrema',()=>{
+ const rows=[{x:0,y:500},...[1,2,3,4,5,6,7].map((x,i)=>({x,y:[100,98,102,-500,80,82,78][i]}))];
+ const s=signalAudit(rows);
+ assert.equal(s.edgeCount,3);assert.equal(s.lowEdge,100);assert.equal(s.highEdge,80);assert.equal(s.edgeContrast,20);assert.equal(s.span,1000);
+ assert.equal(signalAudit(rows.slice(1,6)).edgeCount,2);
+});
+test('simulation truth requires exact regeneration and a valid seed',()=>{
+ const recipe={generator:'weak-signal-v1',effect:20,noise:20,seed:42},text=weakSignalDemo(20,20,42);
+ assert.deepEqual(verifiedSimulation(recipe,text),recipe);
+ assert.equal(verifiedSimulation({...recipe,effect:0},text),null);
+ assert.equal(verifiedSimulation(recipe,text+'\n'),null);
+ assert.equal(verifiedSimulation(null,text),null);
+ assert.equal(verifiedSimulation({generator:'weak-signal-v1'},weakSignalDemo()),null);
+ for(const seed of [0,-1,1.5,1000000,NaN])assert.throws(()=>weakSignalDemo(20,20,seed),/seed/);
+ assert.notEqual(text,weakSignalDemo(20,20,43));
+});
+test('matched weak and flat presets retain identical controls and random well errors',()=>{
+ const weak=parseRaw(weakSignalDemo(20,20,42)),flat=parseRaw(weakSignalDemo(0,20,42));
+ assert.deepEqual(weak.filter(r=>r.role!=='sample'),flat.filter(r=>r.role!=='sample'));
+});
+test('optional simulation recipe is restored without trusting forged truth',()=>{
+ const recipe={generator:'weak-signal-v1',effect:0,noise:20,seed:42};
+ const value={schema:SOURCE_SCHEMA,rawCSV:weakSignalDemo(0,20,42),rule:'control',simulation:recipe};
+ assert.deepEqual(restoreSource(value).simulation,recipe);
+ assert.equal(restoreSource({...value,simulation:{...recipe,effect:20}}).simulation,null);
 });

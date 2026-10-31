@@ -54,6 +54,7 @@ export function sourceDemo(){
 }
 export function weakSignalDemo(effect=20,noise=10,seed=42){
   if(!Number.isFinite(effect)||effect<0||effect>100||!Number.isFinite(noise)||noise<0||noise>30)throw Error('Use effect 0–100 and noise SD 0–30 raw units.');
+  if(!Number.isInteger(seed)||seed<1||seed>999999)throw Error('Use an integer seed from 1 to 999999.');
   let state=seed>>>0;
   const uniform=()=>{state=(Math.imul(1664525,state)+1013904223)>>>0;return (state+.5)/4294967296;};
   const normal=()=>Math.sqrt(-2*Math.log(uniform()))*Math.cos(2*Math.PI*uniform());
@@ -69,7 +70,17 @@ export function signalAudit(rows,fit){
   const k=2,flatAicc=n>k+1&&sse>1e-12?n*Math.log(sse/n)+2*k+2*k*(k+1)/(n-k-1):null;
   const replicated=groups.filter(g=>g.n>1),meanNoise=replicated.length?Math.sqrt(replicated.reduce((s,g)=>s+g.sd*g.sd/g.n,0)/replicated.length):null;
   const span=Math.max(...groups.map(g=>g.mean))-Math.min(...groups.map(g=>g.mean));
-  return {groups,mean,span,meanNoise,rangeNoiseRatio:meanNoise>0?span/meanNoise:null,flatSSE:sse,flatRMSE:Math.sqrt(sse/n),flatAicc,curveRMSE:fit?.rmse??null,deltaAicc:flatAicc!==null&&fit?.aicc!=null?fit.aicc-flatAicc:null};
+  const positive=groups.filter(g=>g.x>0).sort((a,b)=>a.x-b.x),edgeCount=Math.min(3,Math.floor(positive.length/2));
+  const average=gs=>gs.reduce((s,g)=>s+g.mean,0)/gs.length;
+  const lowEdge=edgeCount?average(positive.slice(0,edgeCount)):null,highEdge=edgeCount?average(positive.slice(-edgeCount)):null;
+  return {groups,mean,span,meanNoise,rangeNoiseRatio:meanNoise>0?span/meanNoise:null,edgeCount,lowEdge,highEdge,edgeContrast:edgeCount?lowEdge-highEdge:null,flatSSE:sse,flatRMSE:Math.sqrt(sse/n),flatAicc,curveRMSE:fit?.rmse??null,deltaAicc:flatAicc!==null&&fit?.aicc!=null?fit.aicc-flatAicc:null};
+}
+export function verifiedSimulation(recipe,text){
+  if(!recipe||recipe.generator!=='weak-signal-v1')return null;
+  const {effect,noise,seed}=recipe;
+  if(!Number.isFinite(effect)||!Number.isFinite(noise)||!Number.isInteger(seed))return null;
+  try{if(weakSignalDemo(effect,noise,seed)!==text)return null;}catch{return null;}
+  return {generator:'weak-signal-v1',effect,noise,seed};
 }
 export function restoreSource(value){
   if(!value||value.schema!==SOURCE_SCHEMA||typeof value.rawCSV!=='string')throw Error('Invalid source-record schema.');
@@ -78,5 +89,5 @@ export function restoreSource(value){
   if(!result.variants[value.rule])throw Error('Selected normalization is undefined for a constant sample series.');
   const metadata={};
   for(const k of ['source','endpoint','exposure','controlEvidence','readoutEvidence','mechanismEvidence'])metadata[k]=typeof value.metadata?.[k]==='string'?value.metadata[k].slice(0,3000):'';
-  return {rawCSV:value.rawCSV,rule:value.rule,scope:value.scope==='target'?'target':'readout',metadata,result};
+  return {rawCSV:value.rawCSV,rule:value.rule,scope:value.scope==='target'?'target':'readout',metadata,result,simulation:verifiedSimulation(value.simulation,value.rawCSV)};
 }

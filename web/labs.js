@@ -52,11 +52,35 @@ $('downloadArticle').addEventListener('click',async()=>{
 $('copyArticle').addEventListener('click',async()=>{
   const body=$('articleBody');
   try{
-    const clone=body.cloneNode(true);clone.querySelectorAll('a').forEach(a=>a.append(` (${a.href})`));
+    const clone=body.cloneNode(true);
+    clone.querySelectorAll('.katex').forEach(el=>{const tex=el.querySelector('annotation')?.textContent||el.textContent;el.replaceWith(document.createTextNode(`\\(${tex}\\)`));});
+    clone.querySelectorAll('a[href^="figures/"]').forEach(el=>el.remove());
+    clone.querySelectorAll('a').forEach(a=>a.append(` (${a.href})`));
+    clone.querySelectorAll('p,h1,h2,h3,figcaption,.math-block').forEach(el=>el.append('\n\n'));
     const plain=clone.textContent;
-    if(navigator.clipboard.write&&window.ClipboardItem)await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([body.innerHTML],{type:'text/html'}),'text/plain':new Blob([plain],{type:'text/plain'})})]);
+    const rich=body.cloneNode(true);
+    rich.querySelectorAll('.katex').forEach(el=>{const math=el.querySelector('math')?.cloneNode(true);if(math){math.querySelectorAll('annotation').forEach(a=>a.remove());el.replaceWith(math);}});
+    rich.querySelectorAll('a[href^="figures/"]').forEach(el=>el.remove());
+    rich.querySelectorAll('a').forEach(el=>{el.href=new URL(el.getAttribute('href'),location.href).href;});
+    // Embed PNGs, not expiring preview URLs. ClipboardItem accepts a Promise,
+    // retaining the initiating user gesture while the local figures are encoded.
+    const portableHTML=async()=>{
+      for(const el of rich.querySelectorAll('img')){
+        const response=await fetch(el.getAttribute('src'));if(!response.ok)throw Error('Figure unavailable');
+        const url=URL.createObjectURL(await response.blob());
+        try{
+          const original=new Image();original.src=url;await original.decode();
+          const canvas=document.createElement('canvas');
+          canvas.width=original.naturalWidth;canvas.height=original.naturalHeight;
+          canvas.getContext('2d').drawImage(original,0,0);
+          el.src=canvas.toDataURL('image/png');el.style.maxWidth='100%';el.style.height='auto';
+        }finally{URL.revokeObjectURL(url);}
+      }
+      return new Blob([rich.innerHTML],{type:'text/html'});
+    };
+    if(navigator.clipboard.write&&window.ClipboardItem)await navigator.clipboard.write([new ClipboardItem({'text/html':portableHTML(),'text/plain':new Blob([plain],{type:'text/plain'})})]);
     else await navigator.clipboard.writeText(plain);
-    $('copyStatus').textContent='Article copied with linked citations; plain-text fallback includes full URLs.';
+    $('copyStatus').textContent='Article copied with embedded figures, linked citations and MathML equations. Plain text includes TeX and full URLs. Figure and equation formatting depends on the destination editor; the workbench preserves the complete illustrated version.';
   }
   catch{const range=document.createRange();range.selectNodeContents(body);const s=window.getSelection();s.removeAllRanges();s.addRange(range);$('copyStatus').textContent='Article selected. Use your browser’s Copy command. Download Markdown to preserve linked citations.';}
 });

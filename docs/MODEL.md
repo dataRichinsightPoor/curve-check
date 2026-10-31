@@ -1,6 +1,16 @@
 # Curve Check: model and numerical methods
 
-Version 0.3.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation. The core fitting/audit rules are unchanged from v0.1.0; the interface names a successful numerical result “Localized under working model” and separately marks readout validity and biological attribution unverified.
+Version 0.4.0 is an original research prototype. All supplied cases are synthetic; numerical agreement tests do not constitute biological validation. The core fitting/audit rules are unchanged from v0.1.0; the interface names a successful numerical result “Localized under working model” and separately marks readout validity and biological attribution unverified.
+
+## Matched weak-response experiment added in v0.4.0
+
+Three presets preserve the selected seed: effect 20/noise SD 20, effect 20/SD 1, and effect 0/SD 20. The linear-congruential and Box–Muller generator is deterministic; seeds are integers 1–999999. Next realization advances the seed, wrapping at 999999. This is an illustration, not a Monte Carlo estimate of operating characteristics.
+
+The signed edge-group contrast averages the lowest and highest three positive-dose means with equal dose weighting. For fewer than six positive doses it uses floor(n/2) per edge, so groups never overlap. Exact zero-dose observations are excluded only from this contrast, not from fits or the constant comparator. This contrast does not identify Emax, certify plateaus, or supply a confidence interval.
+
+The optional `simulation` object is additive to the existing source-v1 schema. Ground-truth display is permitted only if the specified generator reproduces the exact raw CSV; malformed or mismatched recipes are ignored. The truth overlay transforms the generating raw signal using the observed control means, so it uses the same coordinate system as plotted wells. Known truth is not inferred from a filename or evidence note.
+
+At zero amplitude the relative midpoint and slope are unidentified. The reported AICc is a working-model diagnostic subject to this singular limit and numerical bounds, not a calibrated likelihood-ratio test, significance test, equivalence test, or assay acceptance rule. Constant-model preference is not proof of inactivity. The former range/noise ratio remains in machine-readable output for compatibility but is no longer emphasized in the UI; extrema are a noise-sensitive descriptive range, not an amplitude estimate.
 
 ## Source reconstruction added in v0.3.0
 

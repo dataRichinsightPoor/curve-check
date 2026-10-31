@@ -1,0 +1,32 @@
+[
+  {
+    "effect": 20,
+    "noise": 20,
+    "seed": 42,
+    "midpoint": 6.17458331151339,
+    "range": 49.77850355433075,
+    "edgeContrast": 16.8258770618844,
+    "deltaAicc": 3.264270139495224,
+    "boundary": true
+  },
+  {
+    "effect": 20,
+    "noise": 1,
+    "seed": 42,
+    "midpoint": 9.855388703917152,
+    "range": 20.786766031097443,
+    "edgeContrast": 19.65200722187714,
+    "deltaAicc": -59.578147613738615,
+    "boundary": false
+  },
+  {
+    "effect": 0,
+    "noise": 20,
+    "seed": 42,
+    "midpoint": 1838.2514884682514,
+    "range": 35.766234872563004,
+    "edgeContrast": -1.5208024191170608,
+    "deltaAicc": 12.58581086983034,
+    "boundary": true
+  }
+]

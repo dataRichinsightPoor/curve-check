@@ -1,5 +1,26 @@
 # Curve Check regression inventory
 
+## Illustrated mathematical article
+
+- Three reproducible original SVG figures, not the uploaded image; each has a readable caption and full-size link.
+- Seven display equations and inline equations render with self-hosted KaTeX CSS/fonts and accessible MathML.
+- Reference list separates papers, editorial, industry white paper, official ICH text, USP previews, and documentation.
+- Copy button retains citations, converts equations to MathML for rich copy and TeX for plain text; portable HTML embeds figures as PNG data URIs rather than temporary preview URLs. Editor compatibility is explicitly qualified.
+- Article download matches canonical Markdown; source repository includes figures beside it. Mobile figure and equation scrolling stays within the article, not the page.
+- Nested source-to-curve session restore retains only verified simulation recipes.
+
+## v0.4 weak-response refinement
+
+Opened v0.3 before editing; default weak-response comparison and seven tabs rendered without page exceptions.
+
+- Three presets: same 20-point effect with SD 20 or 1, and zero effect with SD 20. Presets preserve selected seed.
+- Seed validation and next-realization control work; no preferred-result seed search.
+- Actual generated settings remain labeled separately from pending control edits.
+- Known-truth overlay appears only for a verified synthetic recipe; raw edits/uploads remove it. JSON recipe restoration requires exact regeneration of the raw CSV.
+- Distinguish fixed edge-group contrast, noisy observed extrema, mean-level noise, numerical localization, and absolute threshold.
+- JSON and Markdown exports retain generation settings; Markdown adds reviewed reporting language.
+- Repeat all existing source/curve/laboratory/article/export/navigation flows and desktop/mobile QA.
+
 ## v0.3 source-to-claim revision
 
 Before this edit, v0.2.0 was opened in Chromium: five tabs, 28 cases, no page errors. Preserve all flows below.

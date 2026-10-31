@@ -2,9 +2,11 @@
 
 ## What went into the curve?
 
-Data-Rich, Insight-Poor · 99 Small Problems, installment 09. Companion to Curve Check v0.3.0 · October 31, 2026.
+Data-Rich, Insight-Poor · 99 Small Problems, installment 09. Companion to Curve Check v0.4.0 · October 31, 2026.
 
-I can make a small response occupy the entire vertical axis without changing a single observation. In the synthetic example accompanying this article, the underlying signal falls by about four units against independent controls separated by one hundred. Normalize against those controls and the effect stays small; declare the sample series’ own extrema to be zero and one hundred, and it acquires the visual confidence of complete inhibition. The preparation has improved considerably. The experiment has not been consulted.
+I am looking at a concentration series that barely persuades me it is different from a flat line. The assay has a one-hundred-unit reference window; the underlying response in this synthetic experiment changes by twenty, while individual wells carry a noise standard deviation of twenty units. The software nevertheless returns a smooth logistic curve and a midpoint. It has done the fitting. Whether we have measured a reportable potency remains somebody else’s problem, unless the workflow has quietly eliminated that somebody.
+
+This is not an argument against automation, nor a rule that twenty-percent responses are uninteresting. I can reduce the noise while leaving that same small response unchanged, and the midpoint becomes much easier to locate. I can also remove the response entirely and still ask the optimizer to return four parameters. The distinction I care about is whether the pipeline preserves these different experimental situations or gives all three the same well-formatted answer.
 
 The same danger appears farther downstream. A compound can inhibit the reporter used to measure a biological process and produce a reproducible concentration response, complete with potency, concentration dependence, and structure–activity relationships ([Auld and Inglese, Assay Guidance Manual](https://www.ncbi.nlm.nih.gov/sites/books/NBK374281/)). The fitting algorithm may be entirely correct about that response while the caption quietly assigns it to the protein we hoped to study.
 
@@ -20,15 +22,31 @@ Comparability Check already asks which claim a comparison supports, separates lo
 
 The narrower job here is the source-to-claim handoff for a concentration-response record. I want to retain the original sample signals, the control observations, the exact transformation, the numerical result, and the evidence that remains missing in one reconstructable record. The fitting question still matters, but it becomes one stage of an audit rather than the product’s entire purpose.
 
+## Twenty out of one hundred is not a signal-to-noise ratio
+
+For the central example, I stipulate a decreasing response with true upper and lower signals of 100 and 80, a relative midpoint of 10 nM, and slope 1. There are thirteen log-spaced concentrations from 0.01 to 10,000 nM, three wells per concentration, and eight wells for each independent reference control. Independent Gaussian noise is added to sample and control wells. These are the generator’s settings, not parameters recovered from an experiment and certainly not recommended universal assay-design specifications.
+
+Twenty out of one hundred describes a fraction of the available response window, not a complete signal-to-noise ratio. A twenty-unit effect against one unit of well-level noise is a different experiment from the same effect against twenty units of noise. The companion tool therefore offers three matched presets: the twenty-point response with substantial noise, the same response with low noise, and a genuinely constant generating response with substantial noise. Presets preserve the selected random seed, so the comparison changes the stated experimental property rather than quietly choosing a more cooperative set of random draws.
+
+I deliberately keep the full control window visible and let the reader reveal the known generating response separately from the fitted candidate. The overlay is available only when its recipe reproduces the exact synthetic input; it disappears for unverified data. A new realization can change the apparent pattern, sometimes considerably. The seed is therefore part of the exported record, not a setting to keep changing until the desired verdict appears.
+
+There are several different “twenties” one could confuse here. The true twenty-point amplitude is known because I constructed the simulation. The observed low-versus-high dose contrast is a noisy description of those data; the difference between fitted asymptotes is a model estimate that may be poorly constrained; and the observed maximum-minus-minimum range selects the most extreme concentration means. In the default realization, that last range is about 49.8 percentage points even though the true raw amplitude is twenty. Noise and estimated control normalization have not discovered a larger biological effect. They have changed the observations from which the range was calculated.
+
+To make that distinction visible, the tool also reports the signed difference between the averages of the three lowest and three highest positive-dose means. Those groups are chosen by concentration, not by which responses look most impressive. This edge-group contrast remains descriptive: it is neither a fitted Emax, evidence that plateaus have been sampled, nor an uncertainty interval. The within-dose estimate of mean-level technical noise answers another question again; it does not include all uncertainty from controls or independent runs.
+
+![Figure 1. One small response, three different evidentiary situations. Original synthetic data use seed 42, thirteen concentrations, three wells per dose, and eight wells per independent control. Blue points are individual independently normalized wells; dark points are dose means; green is the fitted free 4PL; purple dashes show the known generator transformed using the observed controls; gray dashes show the constant fit. Noise is the generating well-level SD in raw units, not an estimated SNR. The same random draws are used across panels. Fitting all three is possible; locating a meaningful midpoint is not.](figures/weak-response.svg)
+
+## What the flat comparator can and cannot tell me
+
+The constant comparator asks whether the more flexible curve earns its additional parameters under a particular working model. Both fits use the same concentration means and assume independent Gaussian errors with common unknown variance; AICc counts two parameters for the constant model and five for the free 4PL, including variance. In the default synthetic realization, the logistic candidate reduces RMSE from approximately 12.9 to 8.76 percentage points, but its AICc is about 3.26 higher than the constant model’s. The optimizer has improved the residual sum of squares without making the curve the preferred description by this diagnostic.
+
+I would not turn that difference into a p-value, an assay acceptance limit, or a probability that the compound is inactive. There is an additional mathematical caution at the flat limit: when the two logistic asymptotes coincide, every midpoint and slope produces the same constant response. Those parameters are unidentified, not merely imprecise. A routine information-criterion calculation does not remove that singularity, and a conventional parameter-count likelihood-ratio significance claim would need separate justification. In this example the 4PL also reaches a numerical boundary, another reason to inspect the fit rather than promote the comparison into an adjudicator.
+
+Nor does preference for the constant model demonstrate equivalence to zero effect. “This experiment did not resolve a concentration response” and “this experiment excludes effects large enough to matter” are different statements. The latter needs a prospectively justified effect margin and an uncertainty analysis suited to that purpose. Conversely, a sufficiently precise small effect may be distinguishable from flat without being biologically consequential, and its midpoint may be localized without the response ever reaching fifty-percent inhibition. Evidence for a change, evidence about its magnitude, and evidence for a particular potency claim should not be collapsed into one traffic light.
+
+The concern about automation is therefore not that a person must manually draw every curve. It is that removing a review step can also remove the question that step was meant to ask. I would require explicit paths for unresolved, partial, nonmonotone, and unsupported responses, together with the reason a result was withheld and the evidence needed to reconsider it. Exception handling belongs in the scientific specification, not in a footnote about software failure. Nothing in this argument requires assuming that a particular company, product, or staffing decision has caused such a failure.
+
 ## Reconstruct before interpreting
-
-The most important practical case is also the least theatrical. Suppose the assay offers a one-hundred-unit reference window, but the compound changes the underlying response by only twenty units, with enough scatter that the plotted observations look nearly flat. An automated fitting pipeline can still return a logistic curve and a midpoint. If the output is then accepted because the procedure completed, the pipeline has answered the computational question and quietly skipped the evidentiary one.
-
-Twenty out of one hundred describes a fraction of the available response window, not a complete signal-to-noise ratio. A twenty-unit effect against one unit of measurement noise is a different experiment from the same effect against twenty units of noise. The new default example lets those two quantities vary independently and shows the observations on the full control scale, beside a fitted constant response and the logistic candidate. It also includes zero true effect, because a system that always produces an IC50 should be tested on an experiment that contains no potency to recover.
-
-The comparison asks a narrower question than biological validity: does a more flexible curve describe these observations sufficiently better than a constant response under the chosen error assumptions? The tool reports residual error and small-sample-corrected AIC for both, with the variance parameter counted and the assumptions visible. It does not mislabel that comparison as a calibrated significance test, and it does not convert a lower AICc into proof of useful effect size. The relative midpoint of a small partial response can be numerically located while the control-defined fifty-percent effect is absent.
-
-The concern about automation is therefore not that a person must manually draw every curve. It is that removing a review step can also remove the question that step was meant to ask. A defensible automated pipeline needs an explicit path for flat, weak, unresolved, partial, and unsupported responses; otherwise “analysis complete” becomes an unusually efficient way to conceal “interpretation not examined.” Nothing in this argument requires assuming that a particular company, product, or staffing decision has caused such a failure.
 
 The new starting point in Curve Check is a raw table with three fields: role, concentration, and signal. Sample wells retain their concentrations in nM; neutral and independently defined full-effect reference wells retain their measured signals. The tool computes control means and observed standard deviations, reconstructs independent-control normalization, and places a deliberately questionable sample-min–max branch beside it. Both branches use precisely the same sample observations.
 
@@ -44,17 +62,54 @@ The relative midpoint of a four-parameter logistic model is halfway between its 
 
 For the decreasing model used in this workbench, the mathematics is:
 
-```text
-y(x) = B + (T − B) / [1 + (x/C)^h]
+\[
+y(x)=B+\frac{T-B}{1+(x/C)^h},\qquad y(C)=\frac{T+B}{2}.
+\]
 
-y(C) = (T + B)/2
+\[
+x_{50}=C\left(\frac{T-50}{50-B}\right)^{1/h},\qquad B<50<T.
+\]
 
-x50 = C [(T − 50)/(50 − B)]^(1/h), provided B < 50 < T.
-```
-
-Here C is the relative midpoint, B and T are the asymptotes, and h is the positive slope parameter. These equations also show why the distinction matters without requiring any biological speculation. In an illustrative curve with T = 100 and B = 65, the relative midpoint occurs at 82.5% remaining activity, corresponding to only 17.5 percentage points of inhibition from the upper plateau. There is no finite absolute IC50 in that stipulated model.
+Here C is the relative midpoint, B and T are the asymptotes, and h is the positive slope parameter. In the central twenty-point example, T = 100 and B = 80, so the true relative midpoint of 10 nM occurs at 90% remaining activity: ten percentage points of inhibition, not fifty. There is no finite absolute IC50 in that stipulated model. Reducing the noise improves our ability to recover the relative midpoint; it cannot create an absolute threshold that the response never reaches.
 
 The midpoint has not failed because it answers a relative question. The failure would be reporting it as though half of the control-defined activity had disappeared. I would report the response range and the midpoint together, so that the reader is not required to reverse-engineer efficacy from a potency column.
+
+![Figure 2. The same relative midpoint does not mean the same inhibition. Both exact, noise-free generating curves have C = 10 nM and h = 1. The full response reaches 50% remaining activity at C; the twenty-point partial response reaches 90% remaining activity there and approaches 80%, never 50%. The 0 and 100 reference levels are stipulated independent controls, not sample extrema. This is algebra, not experimental evidence for either response.](figures/relative-absolute.svg)
+
+## The mathematics that the smooth line cannot negotiate
+
+The amplitude matters because it determines how much the observations change when the midpoint moves. Write \(A=T-B\), \(q=(x/C)^h\), and \(m=\log_{10}(C/c_0)\), where \(c_0=1\ \mathrm{nM}\) fixes the concentration unit. Differentiating the stipulated response with respect to its log-midpoint gives:
+
+\[
+\frac{\partial y}{\partial m}=\ln(10)Ah\frac{q}{(1+q)^2}.
+\]
+
+At \(x=C\), this sensitivity is \(\ln(10)Ah/4\). Reducing the amplitude fivefold reduces the change in response produced by a small shift in log-midpoint fivefold, at the same slope and relative dose. At zero amplitude the derivative vanishes everywhere. The midpoint and slope have ceased to affect the predicted observations; no extra optimizer iterations can discover parameters that have disappeared from the experiment's response function.
+
+For independent Gaussian well errors with known common variance \(\sigma^2\), and with the other curve parameters treated as known, the expected Fisher information for \(m\) is:
+
+\[
+\mathcal I_{mm}=\frac{1}{\sigma^2}\sum_i
+\left[\ln(10)Ah\frac{q_i}{(1+q_i)^2}\right]^2.
+\]
+
+This is an intentionally favorable benchmark, not the uncertainty calculation used by Curve Check. At fixed slope, midpoint, noise, and dose placement, information scales as \(A^2/\sigma^2\): a twenty-unit amplitude carries one twenty-fifth the information of a hundred-unit amplitude. Adding independent wells can increase information, but fitting the top, bottom, and slope rather than knowing them introduces additional ambiguity. Where the regular information matrix is invertible, nuisance-parameter adjustment makes that loss explicit:
+
+\[
+\mathcal I_{\mathrm{eff}}
+=\mathcal I_{mm}-\mathcal I_{m\eta}\mathcal I_{\eta\eta}^{-1}\mathcal I_{\eta m},
+\qquad \eta=(B,A,h).
+\]
+
+The subtracted term represents information lost to parameters whose effects can imitate a change in midpoint. This regular local expression should not be used at the flat singularity, where the required invertibility fails, or treated as a calibrated confidence interval for a noisy boundary fit. Its purpose here is to expose what the optimizer cannot supply: independent information separating the parameters.
+
+![Figure 3. Information collapses quadratically with amplitude. This original analytical figure plots I(A)/I(100) = (A/100)^2 for fixed noise, slope, midpoint, and concentration design, assuming independent Gaussian errors and known nuisance parameters. At amplitude 20, the information is 0.04 of the amplitude-100 benchmark. This is not an empirical acceptance curve, a power calculation, or a calibrated uncertainty interval for the workbench.](figures/information.svg)
+
+The qualification about dose placement matters as much as the square. The factor \(q/(1+q)^2\) is largest at the midpoint and tends toward zero at either extreme. Wells on plateaus help estimate plateaus; they do not substitute for observations locating the transition. Conversely, measuring only the transition while treating unobserved plateaus as free parameters invites a different ambiguity. I need a design that informs the question, not merely enough wells to populate a spreadsheet.
+
+This also explains why rescaling cannot rescue the weak experiment. Under a fixed affine transformation \(z=a+by\), both the derivative and noise SD are multiplied in magnitude by \(|b|\), leaving their ratio, and therefore this information, unchanged. Stretching twenty units across a hundred-unit plot stretches the noise too. If the scaling constants are estimated from the same data, they add an uncertainty problem rather than an information source. A more flattering axis is not a more informative experiment.
+
+Structural nonidentifiability and practical nonidentifiability should not be conflated: the former persists even with ideal observations under the specified model and design, while the latter can arise because the available observations are insufficiently informative; profile-likelihood work provides a principled way to investigate these distinctions ([Raue et al., 2009](https://academic.oup.com/bioinformatics/article/25/15/1923/213246)). That paper develops methodology for partially observed dynamical models, not a validation of this IC50 tool, and its scope should not be enlarged by citation ([Raue et al., 2009](https://academic.oup.com/bioinformatics/article/25/15/1923/213246)). The mathematical distinction is useful here precisely because “the fitting routine finished” does not distinguish either failure mode.
 
 ## Convergence is an event in the optimizer
 
@@ -80,9 +135,9 @@ Technical replication and concentration placement answer different questions. Ad
 
 For independent low and high controls L and H, a common affine normalization is:
 
-```text
-normalized response = 100 × (raw signal − L)/(H − L)
-```
+\[
+z=100\,\frac{y-L}{H-L}.
+\]
 
 The denominator is part of the measurement, not a cosmetic choice. Methods that incorporate curve observations and control observations jointly can explicitly account for information that is otherwise compressed into normalization constants ([La et al., 2023](https://pubs.acs.org/doi/10.1021/acs.jmedchem.3c00107)). Shared estimated controls also create a dependence structure that a simple independent-error fit to normalized values does not automatically retain ([Tansey et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC9007438/)).
 
@@ -116,6 +171,8 @@ An upward response, a rebound, two separated transitions, or systematic asymmetr
 
 The expanded workbench supplies stylized examples of these shapes alongside detector clipping, solubility-limited exposure, a dose-correlated preparation step, and a concentration-label error. These are constructed counterexamples, not a catalog of uniquely diagnostic signatures. In particular, a plateau caused by clipping or capped exposure should not be interpreted as a demonstrated biological maximum simply because the logistic model has a parameter ready to receive it.
 
+Automation can help rather than conceal this problem. Di Veroli and colleagues automated comparisons among monophasic and multiphasic models, using a complexity-penalizing criterion; in their analysis, 28% of 11,650 CCLE cases were better described by one of the multiphasic candidates ([Di Veroli et al., 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4589737)). That percentage belongs to their data, candidate models, and ranking procedure, not to all pharmacology, and the selected shape does not by itself identify the molecular processes producing it ([Di Veroli et al., 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4589737)). The lesson is not that software should be less capable; it is that the questions asked of it should be less impoverished.
+
 Hill slopes also deserve restraint. Tonge discusses cooperativity, aggregation, and tight binding among explanations for deviations from a simple unit-slope response, so a steep fitted slope does not uniquely identify any one of them ([Tonge, 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6570549/)). Aggregation requires appropriate interference investigations rather than a verdict based on curve shape alone ([Assay Guidance Manual, aggregation](https://www.ncbi.nlm.nih.gov/sites/books/NBK442297/)). A slope is a summary of the response under a model; assigning a molecular story to it requires additional evidence.
 
 Influential points create a different temptation. Leave-one-dose-out analysis can reveal how much an estimate depends on one concentration group, but the resulting change is a sensitivity result, not an uncertainty interval or a license to remove the inconvenient group. Published bioassay guidance emphasizes objective, consistently applied outlier procedures rather than visual deletion alone ([White et al., 2019](https://www.tandfonline.com/doi/full/10.2144/btn-2019-0031)). I would rather carry an unresolved preparation problem into the next experiment than remove it from the current one by improving the graph.
@@ -127,6 +184,26 @@ Even when the intended target is involved, an IC50 need not be an affinity const
 Exposure time is equally capable of moving a persuasive curve. Slow binding, reversibility, and irreversible inhibition require appropriate kinetic experiments, and an endpoint IC50 does not replace parameters such as kinact/KI when characterizing irreversible inhibition ([Tonge, 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6570549/)). The workbench’s time-shift example is deliberately only a stipulated shift; it is not a kinetic simulator and does not estimate those constants.
 
 In proliferating cells, conventional endpoint drug-response metrics can also depend on division rate and assay duration, motivating growth-rate-normalized measures that use the necessary growth information ([Hafner et al., 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC4887336/)). This does not make every viability result invalid. It means that decreased final signal, slowed accumulation, cell death, and direct pathway inhibition are not interchangeable claims.
+
+## When a fitting error becomes a research decision
+
+The harm is not confined to an unattractive confidence interval. Consider a hypothetical chemistry meeting comparing a 6 nM relative midpoint from a noisy partial response with a 30 nM midpoint from a well-characterized near-complete response. Ranking the first compound as “fivefold better” discards both efficacy and uncertainty. It can direct synthesis toward a property the experiment did not establish. In a 2025 Journal of Medicinal Chemistry editorial, Srinivasan and Lloyd explicitly connect quantitative interpretation, error measurement, and overfitting with the quality of medicinal-chemistry decisions; this is expert commentary, not an original controlled study measuring the cost of automation ([Srinivasan and Lloyd, 2025](https://pubs.acs.org/doi/pdf/10.1021/acs.jmedchem.5c00131)). I do not need an invented dollar figure to take the decision error seriously.
+
+Selectivity can fail in the same way. For log-potencies \(m_1\) and \(m_2\), the log of a concentration ratio is their difference, and its variance is:
+
+\[
+\operatorname{Var}(m_2-m_1)
+=\operatorname{Var}(m_2)+\operatorname{Var}(m_1)
+-2\operatorname{Cov}(m_1,m_2).
+\]
+
+Two printed midpoint estimates do not supply these variances or their covariance. A ratio involving an unlocalized midpoint is not rescued by the other assay being precise; a bound should not silently become an exact denominator; and shared batches or controls should not silently become independence. This is a mathematical requirement for the comparison, not a demand that every early screen use the same inferential machinery.
+
+There is direct research evidence that uncertainty matters downstream. Wang and colleagues analyzed 225,384 pharmacological experiments and developed a framework that carries response uncertainty into assessment of drug-response biomarkers; the resulting prioritization can differ from analysis based on point estimates alone ([Wang et al., 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7746236/)). Tansey and colleagues likewise model controls, experimental variability, and dose response end to end, rather than treating successive fitted summaries as error-free input for the next stage; their proposed response-marker findings still require experimental validation ([Tansey et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC9007438/)). Neither study proves that a statistical method automatically yields a clinically useful biomarker.
+
+The endpoint can mislead even when the fit is excellent. In Hafner and colleagues' BRAF-induced growth-rate experiment, etoposide IC50 changed approximately hundredfold as division time increased threefold, while growth-rate-corrected metrics varied much less ([Hafner et al., 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC4887336/)). Their correction requires growth information and is not universally independent of biological context, especially for time-dependent responses and some killing processes ([Hafner et al., 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC4887336/)). The warning is more interesting than “bad fits give bad answers”: a good fit to the wrong summary can support the wrong biological ranking.
+
+Finally, the output may become a label in a predictive model, a pass/fail rule, or the justification for not repeating an experiment. These are plausible downstream uses, not claims about a particular organization's practices. My objection is to the loss of qualifications at each handoff. If an unresolved relative midpoint becomes an exact potency, then a selectivity ratio, then a training label, the later pipeline can be impeccably reproducible while reproducing the original category error. The decimal places have acquired seniority, not evidence.
 
 ## A ratio of midpoints can conceal a failed comparison
 
@@ -142,13 +219,17 @@ Standards are most useful when their scope survives quotation. ICH Q2(R2), adopt
 
 Its reportable range is the range of results supported by suitable analytical performance, including accuracy and precision, rather than merely the concentrations that happened to be dispensed ([ICH Q2(R2)](https://database.ich.org/sites/default/files/ICH_Q2(R2)_Guideline_2023_1130_ErrorCorrection_2025.pdf)). The biological-assay examples in its annex are illustrative, not universally mandatory designs; numbers such as replicate counts and levels should not be detached from that qualification ([ICH Q2(R2)](https://database.ich.org/sites/default/files/ICH_Q2(R2)_Guideline_2023_1130_ErrorCorrection_2025.pdf)). A discovery screening curve does not become validated simply because it resembles an annex example.
 
-ICH Q14 places intended purpose and anticipated performance in a prospective analytical target profile and distinguishes system suitability from sample suitability ([ICH Q14](https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf)). Its illustrative anti-TNF bioassay includes curve and control checks as well as similarity considerations; the particular R² and parameter-ratio criteria are explicitly examples that can differ between products ([ICH Q14](https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf)). Passing system controls is therefore not a universal answer to whether a particular sample is suitable for the intended relative-potency interpretation.
+ICH Q14 describes the analytical target profile as a way to express intended purpose and anticipated performance, without making a formally documented ATP universally mandatory, and distinguishes system suitability from sample suitability ([ICH Q14](https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf)). Its illustrative anti-TNF bioassay includes curve and control checks as well as similarity considerations; the particular R² and parameter-ratio criteria are explicitly examples that can differ between products ([ICH Q14](https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf)). Passing system controls is therefore not a universal answer to whether a particular sample is suitable for the intended relative-potency interpretation.
 
 Published methodological recommendations add practical design guidance without becoming interchangeable with regulatory requirements. Sebaugh recommends at least two concentrations beyond each bend point for relative midpoint estimation and at least two concentrations with predicted responses on each side of 50% for absolute estimation ([Sebaugh, 2011](https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/pst.426)). The BioPhorum white paper recommends a minimum of eight concentrations to define a 4PL curve, with placement across the asymptotes and transition; it also recommends fitting individual concentration-point values rather than averaging replicates ([White et al., 2019](https://www.tandfonline.com/doi/full/10.2144/btn-2019-0031)). These are contextual recommendations, not evidence that any eight arbitrary concentrations establish a reportable IC50.
 
 USP language requires the same care. The accessible introduction to chapter <1034> describes analysis of biological assays and relative-potency estimation, but an accessible preview is not verification of the complete current official chapter ([USP <1034> preview](https://doi.usp.org/USPNF/USPNF_M5677_02_01.html)). The separately accessible 2024 revision page is a proposal, while USP identifies official status through USP-NF and explains that general chapters numbered 1000–1999 are informational rather than automatically mandatory ([USP proposal preview](https://doi.usp.org/USPNF/USPNF_M5677_20101_01.html); [USP, identifying official text](https://www.usp.org/frequently-asked-questions/identifying-official-text)). I have not treated either preview as a verified current implementation specification.
 
 ## What I would report, and what I would withhold
+
+For the noisy twenty-point demonstration, I would not export the approximately 6.17 nM fitted candidate into an unqualified IC50 column. I would preserve it, if useful for audit, as an unresolved relative-midpoint candidate under the specified model, alongside the control-normalized observations, the flat comparator, the boundary warning, and the absence of an observed mean response reaching fifty-percent inhibition. The true 10 nM midpoint belongs to the simulation description, not to the fitted result. Knowing the answer because I wrote the generator is not evidence that this realization measured it.
+
+For the precise twenty-point demonstration, the appropriate improvement is a better-supported relative midpoint of a partial response, not an upgrade to complete inhibition. For the truly flat generator, there is no underlying midpoint to recover; any finite candidate belongs to the numerical fit to noise. In experimental data I do not know which generator, if any, applies. I would therefore report what the observations and justified model support, and keep “unresolved” distinct from “inactive.”
 
 If a control-defined threshold is bracketed by observations and the assay-specific evidence supports interpretation, I would name the endpoint, exposure, reference controls, units, model, constraints, and uncertainty method. If only a relative midpoint is supported, I would call it relative and report the attainable response alongside it. If 50% inhibition is not observed, I would say so before deciding whether a conditional bound is justified; a response plateau above 50% may imply that no finite absolute IC50 exists in the chosen model ([GraphPad, midpoint definitions](https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm)).
 
@@ -158,10 +239,66 @@ A local interpolation between adjacent concentration means can describe a measur
 
 ## What Curve Check does, and deliberately does not do
 
-Curve Check v0.3.0 begins with raw-source reconstruction and a portable evidence record. The earlier 28 synthetic scenarios, four fitting assumptions, relative-midpoint profile, residual plots, dose-omission sensitivity, and normalized-data interface remain available as supporting diagnostics. The false-curve laboratories demonstrate limitations; all synthetic causes are assigned by the generators, never inferred as diagnoses of uploaded data.
+Curve Check v0.4.0 begins with raw-source reconstruction and a portable evidence record. The earlier 28 synthetic scenarios, four fitting assumptions, relative-midpoint profile, residual plots, dose-omission sensitivity, and normalized-data interface remain available as supporting diagnostics. The false-curve laboratories demonstrate limitations; all synthetic causes are assigned by the generators, never inferred as diagnoses of uploaded data.
 
 The numerical engine remains intentionally narrow: decreasing logistic responses, equal-weight concentration means, bounded parameters, and an approximate common-variance Gaussian profile likelihood. It does not implement a full raw-well/control likelihood, increasing-response fitting, 5PL inference, mixture identification, hierarchical run effects, calibrated small-sample coverage, formal parallelism equivalence testing, or a mechanistic model of aggregation, depletion, cell growth, or time-dependent inhibition. Its use of concentration means also differs from the individual-point recommendation in the BioPhorum white paper ([White et al., 2019](https://www.tandfonline.com/doi/full/10.2144/btn-2019-0031)).
 
 The seven-dose minimum and other numerical flag thresholds are original teaching choices retained from the first version, not Sebaugh criteria, ICH requirements, or USP acceptance rules. Numerical agreement with an independent optimizer tests implementation, not biological validity. No finite catalog covers every possible assay failure, and I would be especially suspicious of a tool that claimed to have eliminated the need to examine how the experiment was conducted.
 
+For a production workflow, I would specify the intended endpoint before the fit; retain raw wells and controls; make variance assumptions and constraints inspectable; distinguish fit completion from identifiability and reportability; preserve exceptions and bounds; and verify performance on representative difficult cases as well as cooperative ones. I would also require change control and an auditable record of overrides. These are my proposed safeguards, not a claim that Curve Check implements a regulated validation system. Automating calculations is sensible. Automating permission to stop asking what they mean is a different specification.
+
 My preferred outcome is a result that cannot lose its qualifications while traveling from instrument file to fitted curve to presentation. The observations, transformations, assumptions, and missing measurements should arrive together, particularly when the figure has become persuasive. The curve is welcome to look elegant. I would just like to know what went into it before it is served as evidence.
+
+## References and reading notes
+
+The list separates research, commentary, industry recommendations, official guidance, and software documentation. Inline citations identify the claims each supports; the equations and three figures are original derivations or explicitly synthetic illustrations, not reproduced experimental results.
+
+### Research and methods papers
+
+1. La VNT, Nicholson S, Haneef A, Kang L, Minh DDL. Inclusion of Control Data in Fits to Concentration–Response Curves Improves Estimates of Half-Maximal Concentrations. Journal of Medicinal Chemistry. 2023;66:12751–12761. Joint curve/control modeling, with inconclusive repeated-run precision differences for pIC50 and slope. [Full paper](https://pubs.acs.org/doi/10.1021/acs.jmedchem.3c00107).
+
+2. Wang D, et al. A statistical framework for assessing pharmacological responses and biomarkers using uncertainty estimates. eLife. 2020;9:e60352. Uncertainty-aware response and biomarker analysis. [Full paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC7746236/).
+
+3. Tansey W, et al. Dose–response modeling in high-throughput cancer drug screenings: an end-to-end approach. Biostatistics. 23(2):643–665; published online 2021. Controls and dose-response uncertainty modeled through the analysis. [Full paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC9007438/).
+
+4. Raue A, et al. Structural and practical identifiability analysis of partially observed dynamical models by exploiting the profile likelihood. Bioinformatics. 2009;25:1923–1929. General identifiability methodology, not direct IC50 validation. [Full paper](https://academic.oup.com/bioinformatics/article/25/15/1923/213246).
+
+5. Sebaugh JL. Guidelines for accurate EC50/IC50 estimation. Pharmaceutical Statistics. 2011;10:128–134. Relative/absolute definitions and design recommendations; the recommendations cited here were verified in the accessible abstract, not through full-text access. [Publisher record and abstract](https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/pst.426).
+
+6. Spiess AN, Neumeyer N. An evaluation of R² as an inadequate measure for nonlinear models in pharmacological and biochemical research: a Monte Carlo approach. BMC Pharmacology. 2010;10:6. Its qPCR-derived sigmoid simulations illustrate model-comparison limitations, not a universal prohibition on reporting R². [Full paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC2892436/).
+
+7. Hafner M, Niepel M, Chung M, Sorger PK. Growth rate inhibition metrics correct for confounders in measuring sensitivity to cancer drugs. Nature Methods. 2016;13:521–527. Experimental and theoretical growth-rate confounding, with stated limits of the correction. [Full paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC4887336/).
+
+8. Di Veroli GY, et al. An automated fitting procedure and software for dose-response curves with multiphasic features. Scientific Reports. 2015;5:14701. Automated model comparison does not by itself identify molecular mechanism. [Full paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4589737).
+
+9. Ritz C, et al. Dose-Response Analysis Using R. PLOS ONE. 2015;10:e0146021. Model families and effective-dose analysis. [Full paper](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146021).
+
+10. Ren X, Xia J. An algorithm for computing profile likelihood based pointwise confidence intervals for nonlinear dose-response models. PLOS ONE. 2019. The cited profile-likelihood methodology is not a coverage validation of Curve Check's midpoint intervals. [Paper and bibliographic record](https://pmc.ncbi.nlm.nih.gov/articles/PMC6347253/).
+
+11. Ianevski A, et al. Spatial artifact detection improves the reproducibility of drug screening experiments. iScience. 2025;28(10):113470. Cited for treatment-well and spatial quality problems, with the paper's caveat about genuine nonsigmoidal responses. [Full paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC12570324/).
+
+### Reviews, commentary, and industry recommendations
+
+12. Tonge PJ. Quantifying the Interactions between Biomolecules: Guidelines for Assay Design and Data Analysis. ACS Infectious Diseases. 2019;5:796–808. Review of inhibition measurements, assay conditions, and mechanistic interpretation. [Full review](https://pmc.ncbi.nlm.nih.gov/articles/PMC6570549/).
+
+13. Srinivasan B, Lloyd MD. Quantitation and Error Measurements in Dose–Response Curves. Journal of Medicinal Chemistry. 2025;68:2052–2056. Editorial, not original experimental research. [Editorial](https://pubs.acs.org/doi/pdf/10.1021/acs.jmedchem.5c00131).
+
+14. White JR, et al. Best Practices in Bioassay Development to Support Registration of Biopharmaceuticals. BioTechniques. 2019;67:126–137. BioPhorum industry white paper; its implementation recommendations are not universal regulatory requirements. [Full paper](https://www.tandfonline.com/doi/full/10.2144/btn-2019-0031).
+
+15. Auld DS, Inglese J. Interferences with Luciferase Reporter Enzymes. Assay Guidance Manual. 2016; updated July 1, 2018. Cited for reporter inhibition, stabilization, and orthogonal investigation. [Full chapter](https://www.ncbi.nlm.nih.gov/sites/books/NBK374281/).
+
+16. Auld DS, Inglese J, Dahlin JL. Assay Interference by Aggregation. Assay Guidance Manual. July 26, 2017. Cited for investigation rather than diagnosis by Hill slope. [Full chapter](https://www.ncbi.nlm.nih.gov/sites/books/NBK442297/).
+
+### Official guidance and compendial status
+
+17. ICH. Q2(R2): Validation of Analytical Procedures. Adopted November 1, 2023; corrected text April 4, 2025. See nonlinear response and reportable range; annex examples remain illustrative. [Official guideline](https://database.ich.org/sites/default/files/ICH_Q2(R2)_Guideline_2023_1130_ErrorCorrection_2025.pdf).
+
+18. ICH. Q14: Analytical Procedure Development. Adopted November 1, 2023; corrected text April 4, 2025. See system/sample suitability and the explicitly illustrative bioassay example. [Official guideline](https://database.ich.org/sites/default/files/ICH_Q14_Guideline_2023_1130_ErrorCorrection_2025.pdf).
+
+19. USP. General chapter <1034>, Analysis of Biological Assays: [accessible chapter preview](https://doi.usp.org/USPNF/USPNF_M5677_02_01.html), [separate revision-proposal preview](https://doi.usp.org/USPNF/USPNF_M5677_20101_01.html), and [Identifying Official Text FAQ](https://www.usp.org/frequently-asked-questions/identifying-official-text). The previews are not verification of the full current official chapter.
+
+### Software documentation and companion work
+
+20. GraphPad Prism documentation: [relative versus absolute IC50](https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_50_of_what__relative_vs_absolu.htm) and [incomplete dose-response curves](https://www.graphpad.com/guides/prism/latest/curve-fitting/reg_incomplete_dose-respone_curves.htm). These explain definitions and implementation issues, not regulatory standards.
+
+21. Data-Rich, Insight-Poor companion repositories: [Censored Potency](https://github.com/dataRichinsightPoor/censored-potency), [Censor Check](https://github.com/dataRichinsightPoor/censor-check), [Comparability Check](https://github.com/dataRichinsightPoor/comparability-check), [Crosstalk Check](https://github.com/dataRichinsightPoor/crosstalk-check), and [The Threshold Is Part of the Measurement](https://github.com/dataRichinsightPoor/threshold-is-part-of-the-measurement). These identify prior series scope, not independent validation of this installment.

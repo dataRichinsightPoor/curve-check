@@ -1,5 +1,19 @@
 # Curve Check verification record
 
+## Version 0.4.0: weak-response and illustrated-article revision
+
+Verified October 31, 2026. Earlier entries below are historical and retain the test counts and scope of their respective versions.
+
+- JavaScript suite: 75/75 tests passed, including derivative finite differences, amplitude-squared information scaling, affine-rescaling invariance, absolute-threshold algebra, figure fixtures, article MathML, and exclusion of the uploaded image.
+- Independent SciPy comparison: 112 fitted-model and 112 profile checks across 28 synthetic scenarios; maximum absolute SSE difference approximately 9.32e-8. Independent NumPy source reconstruction: five fixtures passed. These check implementation agreement, not biological validity, coverage, or regulatory qualification.
+- Local browser flows: all 28 scenarios, four fitting models, controls and profile toggles, dose/noise/seed controls, leave-one-dose-out, CSV/JSON/Markdown/SVG exports, CSV input and rejection, source presets, seed validation, next realization, truth toggling, raw-edit invalidation, raw upload, metadata/scope, normalization handoff, source-record restoration, and nested curve-session restoration.
+- The previously outstanding nested-source issue was a stale-browser-module observation. After clearing the browser cache, exported and restored sessions retained the verified seed-42 simulation recipe. Raw CSV upload correctly removed known-truth status.
+- Three original SVG figures were visually inspected; an information-curve annotation crossing the line was repositioned. Seven display equations and inline equations render with self-hosted KaTeX styling and accessible MathML. No user-provided image is included.
+- Rich clipboard inspection confirmed three embedded PNG data URIs, 21 MathML expressions, citation URLs, and no local or temporary preview URLs. Plain text preserves TeX and external citation URLs. Destination-editor support is not guaranteed; the interface states this limitation.
+- Desktop, 390px mobile, and a short 1440×650 viewport were inspected. No document-level horizontal overflow or page exceptions were observed. Oversized original figures scroll within their container and have full-size links; the page itself does not overflow.
+- KaTeX 0.18.2 is pinned as a build-time dependency. The npm installation audit returned zero known vulnerabilities at verification time; no KaTeX JavaScript runtime is shipped.
+- The redeployed assets were opened through the deployment service's temporary QA address. The permanent Perplexity wrapper presented a Cloudflare challenge to the isolated cloud browser, so its authenticated user-facing wrapper was not independently verified. Hosted checks and local checks are distinguished rather than conflated.
+
 ## Version 0.3.0 source-to-claim revision
 
 - Reviewed 12 related repository/workflow documents and the closest prior curve-fitting article. The overlap assessment and resulting scope changes are in `SERIES-OVERLAP.md`; this is not an exhaustive archive search.

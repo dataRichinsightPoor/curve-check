@@ -1,0 +1,9 @@
+#articleBody figure{margin:36px 0}
+#articleBody .figure-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:5px;background:#f8faf7}
+#articleBody figure img{display:block;width:100%;min-width:600px;height:auto}
+#articleBody figcaption{font:14px/1.7 var(--font);color:var(--muted);margin-top:14px}
+#articleBody .math-block{overflow-x:auto;padding:10px 8px;margin:24px 0;background:var(--panel)}
+#articleBody .katex{font-size:1.05em}
+#articleBody .katex-display{margin:12px 0}
+#articleBody h3{font:700 20px/1.4 var(--font);margin:32px 0 18px}
+@media(max-width:650px){#articleBody{font-size:17px}#articleBody .katex{font-size:1em}}

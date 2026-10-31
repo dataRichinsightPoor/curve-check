@@ -17,6 +17,12 @@ for f in data["fixtures"]:
     assert np.allclose(y, [r["y"] for r in f["control"]], atol=1e-10, rtol=0)
     x = np.array([float(r["concentration"]) for r in sample])
     means = np.array([y[x == dose].mean() for dose in np.unique(x)])
+    positive_means = np.array([y[x == dose].mean() for dose in np.unique(x) if dose > 0])
+    edge_count = min(3, len(positive_means) // 2)
+    assert f["signal"]["edgeCount"] == edge_count
+    if edge_count:
+        contrast = positive_means[:edge_count].mean() - positive_means[-edge_count:].mean()
+        assert math.isclose(contrast, f["signal"]["edgeContrast"], abs_tol=1e-10)
     sse = np.sum((means - means.mean()) ** 2)
     assert math.isclose(sse, f["signal"]["flatSSE"], abs_tol=1e-8)
     if sse > 1e-12:
